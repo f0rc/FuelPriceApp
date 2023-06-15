@@ -12,3 +12,12 @@
 1. nodejs (i think version 20+ does not work not sure install LTS to be safe or 19.x.x)
 2. npm or pnpm
 3. docker + docker-compose
+
+
+# TODO
+- [ ] create the database (schema table, models etc)
+- [ ] profile page
+- [ ] signup/login page (frontend mostly)
+- [ ] log out page (frontend and backend)
+- [ ] customer get new quote component (frontend, backend)
+- [ ] customer quoute history component (frontend, backend)
