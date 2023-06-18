@@ -16,16 +16,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link href="#">Profile</Link>
           </ul>
           <div className="flex flex-row gap-4 pr-10">
-            {/* TODO: ADD HOVER EFFECT */}
             <Link
               href="/auth/login"
-              className="rounded-2xl bg-[#303133] px-4 py-2 font-semibold text-[#EFEFF1] focus:ring-4 focus:ring-[#FFDA18] focus:ring-opacity-50"
+              className="rounded-2xl bg-[#303133] px-4 py-2 font-semibold text-[#EFEFF1] hover:bg-dark-color/90 focus:ring-4 focus:ring-[#FFDA18] focus:ring-opacity-50"
             >
               Log In
             </Link>
             <Link
               href="/auth/signup"
-              className="rounded-2xl bg-[#FFDA18] px-4 py-2 font-semibold focus:ring-4 focus:ring-[#303133] focus:ring-opacity-90"
+              className="rounded-2xl bg-[#FFDA18] px-4 py-2 font-semibold hover:bg-yellow-300 focus:ring-4 focus:ring-[#303133] focus:ring-opacity-90"
             >
               Sign Up
             </Link>

@@ -34,7 +34,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className="ml-2 mt-5 flex flex-row">
-            <button className="group flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color focus:ring-4">
+            <button className="group flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color hover:bg-yellow-300 focus:ring-4">
               Get My Quote Now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
