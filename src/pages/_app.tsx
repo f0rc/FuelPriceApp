@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { SessionProvider } from "./auth/SessionProvider";
 import { type ServerSession } from "~/server/auth";
+import Layout from "~/Components/Layout";
 
 const MyApp: AppType<{ session: ServerSession | null }> = ({
   Component,
@@ -10,7 +11,9 @@ const MyApp: AppType<{ session: ServerSession | null }> = ({
 }) => {
   return (
     <SessionProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </SessionProvider>
   );
 };
