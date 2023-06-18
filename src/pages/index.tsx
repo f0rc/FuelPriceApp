@@ -34,7 +34,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className="ml-2 mt-5 flex flex-row">
-            <button className="flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color focus:ring-4">
+            <button className="group flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color focus:ring-4">
               Get My Quote Now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ const Home: NextPage = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={4.5}
                 stroke="currentColor"
-                className="h-6 w-6"
+                className="h-6 w-6 transform transition-transform"
               >
                 <path
                   strokeLinecap="round"
