@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <nav className="flex h-20 flex-row border-b border-black">
         <div className="flex w-full items-center justify-between px-12">
           <ul className="flex flex-row gap-4 text-xl font-medium">
-            <Link href="#" className="pr-4 text-2xl font-semibold">
+            <Link href="/" className="pr-4 text-2xl font-semibold">
               [FUEL]
             </Link>
             <Link href="#">New Quote</Link>
@@ -18,13 +18,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex flex-row gap-4 pr-10">
             {/* TODO: ADD HOVER EFFECT */}
             <Link
-              href="#"
+              href="/auth/login"
               className="rounded-2xl bg-[#303133] px-4 py-2 font-semibold text-[#EFEFF1] focus:ring-4 focus:ring-[#FFDA18] focus:ring-opacity-50"
             >
               Log In
             </Link>
             <Link
-              href="#"
+              href="/auth/signup"
               className="rounded-2xl bg-[#FFDA18] px-4 py-2 font-semibold focus:ring-4 focus:ring-[#303133] focus:ring-opacity-90"
             >
               Sign Up
