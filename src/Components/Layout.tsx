@@ -10,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/" className="pr-4 text-2xl font-semibold">
               [FUEL]
             </Link>
-            <Link href="#">New Quote</Link>
+            <Link href="/newquote">New Quote</Link>
             <Link href="#">Quote History</Link>
             <Link href="#">About</Link>
             <Link href="#">Profile</Link>
