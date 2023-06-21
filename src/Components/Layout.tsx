@@ -1,7 +1,24 @@
 import Link from "next/link";
+// import { useRouter } from "next/router";
 import React from "react";
+import { useSession } from "~/pages/auth/SessionProvider";
+import { api } from "~/utils/api";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const session = useSession();
+  // const router = useRouter();
+
+  const { mutateAsync } = api.auth.logout.useMutation({
+    onSuccess: () => {
+      console.log("logged out");
+      window.location.href = "/";
+    },
+  });
+
+  const handleLogout = async () => {
+    await mutateAsync();
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#EFEFF1]">
       <nav className="flex h-20 flex-row border-b border-black">
@@ -15,7 +32,37 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link href="#">About</Link>
             <Link href="#">Profile</Link>
           </ul>
-          <div className="flex flex-row gap-4 pr-10">
+
+          {
+            // conditional rendering of login/logout buttons based on session
+            session && session.user ? (
+              <div className="flex flex-row gap-4 pr-10">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-2xl bg-[#303133] px-4 py-2 font-semibold text-[#EFEFF1] hover:bg-dark-color/90 focus:ring-4 focus:ring-[#FFDA18] focus:ring-opacity-50"
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-row gap-4 pr-10">
+                <Link
+                  href="/auth/login"
+                  className="rounded-2xl bg-[#303133] px-4 py-2 font-semibold text-[#EFEFF1] hover:bg-dark-color/90 focus:ring-4 focus:ring-[#FFDA18] focus:ring-opacity-50"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="rounded-2xl bg-[#FFDA18] px-4 py-2 font-semibold hover:bg-yellow-300 focus:ring-4 focus:ring-[#303133] focus:ring-opacity-90"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )
+          }
+          {/* <div className="flex flex-row gap-4 pr-10">
             <Link
               href="/auth/login"
               className="rounded-2xl bg-[#303133] px-4 py-2 font-semibold text-[#EFEFF1] hover:bg-dark-color/90 focus:ring-4 focus:ring-[#FFDA18] focus:ring-opacity-50"
@@ -28,7 +75,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             >
               Sign Up
             </Link>
-          </div>
+          </div> */}
         </div>
       </nav>
 

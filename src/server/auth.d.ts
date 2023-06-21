@@ -1,16 +1,8 @@
 export interface ServerSession {
-  user?: {
-    id: string;
-    email: string;
-    username?: string;
-  } & DefaultSession["user"];
+  id: string;
+  email: string;
+  username?: string;
+  email: string;
   expires: Date;
   sessionToken: string;
-}
-
-export interface DefaultSession {
-  user: {
-    email: string;
-    // add more properties here
-  };
 }
