@@ -1,10 +1,8 @@
 import React from "react";
 import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -21,6 +19,8 @@ const Login = () => {
   const { mutateAsync } = api.auth.login.useMutation({
     onSuccess: () => {
       console.log("success");
+      // add a check to see if its first login then go to profile page prob some db check idk
+      window.location.href = "/";
     },
   });
 
@@ -28,17 +28,10 @@ const Login = () => {
     e?.preventDefault();
     console.log("DATA", data);
     try {
-      const result = await mutateAsync({
+      await mutateAsync({
         email: data.email,
         password: data.password,
       });
-
-      if (result.status === "success") {
-        router.push("/");
-      } else {
-        // set the error to ui
-        console.log("ERROR", result);
-      }
     } catch (error) {
       console.log("Error:", error);
     }

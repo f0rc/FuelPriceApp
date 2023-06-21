@@ -32,7 +32,6 @@ const Home: NextPage = () => {
               <h1 className="text-center text-7xl font-bold">Today!</h1>
             </div>
           </div>
-
           <div className="ml-2 mt-5 flex flex-row">
             <button className="group flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color hover:bg-yellow-300 focus:ring-4">
               Get My Quote Now

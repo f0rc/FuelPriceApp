@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { hash, verify } from "argon2";
 import { randomUUID } from "crypto";
 import Cookies from "cookies";
@@ -126,7 +130,41 @@ export const authRouter = createTRPCRouter({
   }),
 
   getSession: publicProcedure.query(({ ctx }) => {
+    if (!ctx.session || ctx.session.expires < new Date()) {
+      return null;
+    }
     return ctx.session;
+  }),
+
+  logout: protectedProcedure.mutation(async ({ ctx }) => {
+    console.log("cookie", ctx.req.headers.cookie);
+    console.log("money", ctx.session);
+
+    if (!ctx.session || ctx.session.expires < new Date()) {
+      return {
+        status: "success",
+      };
+    }
+
+    const { prisma } = ctx;
+
+    await prisma.session.delete({
+      where: {
+        sessionToken: ctx.session.sessionToken,
+      },
+    });
+
+    const cookies = new Cookies(ctx.req, ctx.res);
+
+    cookies.set("auth-session-id", "", {
+      expires: new Date(0),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return {
+      status: "success",
+    };
   }),
 });
 
