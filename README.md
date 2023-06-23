@@ -15,9 +15,9 @@
 
 
 # TODO
-- [ ] create the database (schema table, models etc)
+- [x] create the database (schema table, models etc)
 - [ ] profile page
-  - [ ] frontend ui + validation
+  - [x] frontend ui + validation
   - [ ] backend 
 - [ ] signup/login/logout page (frontend, backend)
   - [ ] frontend ui + validation
