@@ -19,11 +19,11 @@
 - [ ] profile page
   - [x] frontend ui + validation
   - [ ] backend 
-- [ ] signup/login/logout page (frontend, backend)
-  - [ ] frontend ui + validation
+- [x] signup/login/logout page (frontend, backend)
+  - [x] frontend ui + validation
   - [x] backend api (signup, login, logout)
 - [ ] customer get new quote component (frontend, backend)
-  - [ ] frontend ui 
+  - [x] frontend ui 
   - [ ] backend api
 - [ ] customer quoute history component (frontend, backend)
   - [ ] frontend ui

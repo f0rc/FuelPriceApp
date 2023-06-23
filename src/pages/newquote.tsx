@@ -5,7 +5,7 @@ const newquote = () => {
     <div className="mt-14 flex justify-center align-middle">
       <div className="min-w-fit border-4 border-black p-10">
         <h1 className="mb-10 text-center">
-          <span className=" text-3xl font-bold">New Quote</span>
+          <span className="text-3xl font-bold">New Quote</span>
         </h1>
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">

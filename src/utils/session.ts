@@ -22,11 +22,8 @@ export const getServerAuthSession = async (ctx: {
       });
       if (user) {
         return {
-          user: {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-          },
+          id: user.id,
+          username: user.username,
           expires: session.expires,
           sessionToken: session.sessionToken,
         };

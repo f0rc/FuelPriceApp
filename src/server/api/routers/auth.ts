@@ -11,35 +11,30 @@ import Cookies from "cookies";
 // import Cookies from "cookies";
 
 export const loginSchema = z.object({
-  //username: z.string().min(3).max(20),
-  email: z.string().email(),
+  //username: z.string()
+  username: z.string().min(3).max(20),
   password: z.string().min(8).max(100),
 });
 
-export const signUpSchema = loginSchema.extend({
-  username: z.string().min(3).max(20),
-});
-
 export type LoginInput = z.infer<typeof loginSchema>;
-export type SignUpInput = z.infer<typeof signUpSchema>;
 
 export const authRouter = createTRPCRouter({
   signUp: publicProcedure
-    .input(signUpSchema)
+    .input(loginSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma } = ctx;
-      const { email, password, username } = input;
+      const { username, password } = input;
 
       const existingUser = await prisma.user.findUnique({
         where: {
-          email: email,
+          username: username,
         },
       });
 
       if (existingUser) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Email already in use",
+          message: "Username already in use",
         });
       }
 
@@ -47,9 +42,8 @@ export const authRouter = createTRPCRouter({
 
       const result = await prisma.user.create({
         data: {
-          email,
-          password: hashedPassword,
           username,
+          password: hashedPassword,
         },
       });
 
@@ -63,17 +57,17 @@ export const authRouter = createTRPCRouter({
       return {
         status: "success",
         message: "User created",
-        result: result.email,
+        result: result.username,
       };
     }),
 
   login: publicProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
     const { prisma } = ctx;
-    const { email, password } = input;
+    const { username, password } = input;
 
     const existingUser = await prisma.user.findUnique({
       where: {
-        email: email,
+        username: username,
       },
     });
 
