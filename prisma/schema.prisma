@@ -21,8 +21,7 @@ model Session {
 
 model User {
     id       String    @id @default(cuid())
-    username String
-    email    String    @unique
+    username String    @unique
     password String
     sessions Session[]
     profile  Profile?
@@ -47,22 +46,23 @@ model Profile {
     zipcode  String  @db.VarChar(9)
     // one to many
     quotes   Quote[]
-    address String 
-    @@id([id,address1])
+    address  String
+
+    @@id([id, address1])
 }
 
 model Quote {
-    id      Int     @id @default(autoincrement())
-    profile Profile @relation(fields: [quoteID, address1], references: [id, address1])
-    quoteID Int     @unique
-    gallonsReq Decimal @db.Decimal(5,2)
+    id             Int      @id @default(autoincrement())
+    profile        Profile  @relation(fields: [quoteID, address1], references: [id, address1])
+    quoteID        Int      @unique
+    gallonsReq     Decimal  @db.Decimal(5, 2)
     // Since address2 is optional, don't forget to add in address2 in backend
-    address1 String
-    deliveryDate DateTime
+    address1       String
+    deliveryDate   DateTime
     suggestedPrice Decimal
-    totalamtDue Decimal
+    totalamtDue    Decimal
+
     @@unique([id, address1])
-    
 }
 
 enum State {
