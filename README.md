@@ -17,7 +17,14 @@
 # TODO
 - [ ] create the database (schema table, models etc)
 - [ ] profile page
-- [ ] signup/login page (frontend mostly)
-- [ ] log out page (frontend and backend)
+  - [ ] frontend ui + validation
+  - [ ] backend 
+- [ ] signup/login/logout page (frontend, backend)
+  - [ ] frontend ui + validation
+  - [x] backend api (signup, login, logout)
 - [ ] customer get new quote component (frontend, backend)
+  - [ ] frontend ui 
+  - [ ] backend api
 - [ ] customer quoute history component (frontend, backend)
+  - [ ] frontend ui
+  - [ ] backend api
