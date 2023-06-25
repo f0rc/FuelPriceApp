@@ -1,4 +1,4 @@
-import Quote from "./quote";
+import Quote from "./Quote";
 
 export interface QuoteProps {
     id: string,
@@ -15,7 +15,7 @@ export interface QuotesListProps {
 
 const QuoteList = ({quotes}:QuotesListProps) => {
   return (
-    
+
     <ul className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
         {quotes.map(quote => 
         <Quote key={quote.id}
