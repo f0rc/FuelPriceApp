@@ -28,8 +28,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               [FUEL]
             </Link>
             <Link href="/newquote">New Quote</Link>
-            <Link href="#">Quote History</Link>
-            <Link href="#">About</Link>
+            <Link href="/history">Quote History</Link>
+            <Link href="/about">About</Link>
             <Link href="/profile">Profile</Link>
           </ul>
 

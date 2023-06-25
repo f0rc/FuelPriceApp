@@ -1,0 +1,29 @@
+{
+    "quotes": [
+      {
+        "id":"1",
+        "gallonsreq": "6",
+        "address1": "123 yellow street, Houston TX",
+        "deliveryDate": "6/24/2023",
+        "suggestedPrice": "500",
+        "totalDue": "3000"
+      },
+      {
+        "id":"2",
+        "gallonsreq": "17",
+        "address1": "456 rainbow street, Dallas TX",
+        "deliveryDate": "5/24/2023",
+        "suggestedPrice": "300",
+        "totalDue": "5100"
+      },
+      {
+        "id":"3",
+        "gallonsreq": "16",
+        "address1": "777 casino street, Maimi FL",
+        "deliveryDate": "7/30/2023",
+        "suggestedPrice": "10000",
+        "totalDue": "160000"
+      }
+    ]
+  }
+  
