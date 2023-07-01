@@ -13,7 +13,7 @@ const Home: NextPage = () => {
           <div className="relative">
             <div className="pointer-events-none absolute left-0 top-0 z-0 flex flex-col items-start justify-center pt-10 opacity-40 blur-md">
               <h1 className="text-center text-7xl font-bold drop-shadow-2xl ">
-                Unlock Exclusive kkkkkkkkk
+                Unlock Exclusive
               </h1>
               <h1 className="text-center text-7xl font-bold">
                 Fuel Prices For
