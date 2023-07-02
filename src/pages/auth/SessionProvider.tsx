@@ -9,28 +9,28 @@ import { type ServerSession } from "~/server/auth";
 import { api } from "~/utils/api";
 
 export const AuthContext = createContext<{
-  user: ServerSession | null;
-  setUser: (session: ServerSession | null) => void;
+  session: ServerSession | null;
+  setSession: (session: ServerSession | null) => void;
 }>({
-  user: null,
-  setUser: () => {
+  session: null,
+  setSession: () => {
     throw new Error("not implemented");
   },
 });
 
 export function SessionProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<ServerSession | null>(null);
+  const [session, setSession] = useState<ServerSession | null>(null);
 
-  const { data: session } = api.auth.getSession.useQuery();
+  const { data: sessionToken } = api.auth.getSession.useQuery();
 
   useEffect(() => {
     // console.log("calling sesstion use effect");
     // console.log("session", session?.sessionToken);
-    setUser(session || null);
-  }, [session]);
+    setSession(sessionToken || null);
+  }, [sessionToken]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ session: session, setSession: setSession }}>
       {children}
     </AuthContext.Provider>
   );
@@ -38,9 +38,9 @@ export function SessionProvider({ children }: AuthProviderProps) {
 
 export function useSession() {
   // maybe add setUser ?!
-  const { user } = useContext(AuthContext);
+  const { session } = useContext(AuthContext);
 
-  return { user };
+  return { session };
 }
 
 type AuthProviderProps = {

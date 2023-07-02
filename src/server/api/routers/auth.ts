@@ -33,7 +33,7 @@ export const authRouter = createTRPCRouter({
 
       if (existingUser) {
         throw new TRPCError({
-          code: "CONFLICT",
+          code: "FORBIDDEN",
           message: "Username already in use",
         });
       }
