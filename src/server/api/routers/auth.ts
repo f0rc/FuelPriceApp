@@ -160,6 +160,28 @@ export const authRouter = createTRPCRouter({
       status: "success",
     };
   }),
+
+  // TODO: MOVE THIS TO PROFILE WHEN DONE
+  getUserAddress: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
+
+    const userAddress = await prisma.profile.findUnique({
+      where: {
+        userId: session.User.id,
+      },
+    });
+
+    console.log(userAddress);
+
+    return {
+      address: {
+        street: "123 main st",
+        city: "Houston",
+        state: "TX",
+        zipcode: "12345",
+      },
+    };
+  }),
 });
 
 const fromDate = (time: number, date = Date.now()) =>

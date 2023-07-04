@@ -32,7 +32,7 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
   });
 
-  const { mutate } = api.auth.login.useMutation({
+  const { mutateAsync } = api.auth.login.useMutation({
     onSuccess: () => {
       console.log("success");
       // add a check to see if its first login then go to profile page prob some db check idk
@@ -56,11 +56,11 @@ const Login = () => {
     },
   });
 
-  const onSubmit = handleSubmit((data, e) => {
+  const onSubmit = handleSubmit(async (data, e) => {
     e?.preventDefault();
     // console.log("DATA", data);
     try {
-      mutate({
+      await mutateAsync({
         username: data.username,
         password: data.password,
       });
