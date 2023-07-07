@@ -19,7 +19,7 @@ const Newquote = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     watch,
     // setError, TODO
     setValue,
@@ -103,7 +103,7 @@ const Newquote = () => {
               placeholder="12/12/2023"
             />
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex cursor-not-allowed flex-col gap-1">
             <label
               htmlFor="fuelType"
               className="text-xs font-semibold uppercase"
@@ -140,12 +140,18 @@ const Newquote = () => {
               Price Per Gallon:
             </label>
             <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4">
-              {pricePerGallon.isSuccess ? (
-                <span className="cursor-not-allowed bg-slate-50 text-slate-500">
-                  money
+              {pricePerGallon.isLoading ? (
+                <div className="animate-pulse">
+                  <div className="flex flex-col items-start justify-center gap-4">
+                    <div className="mr-3 h-2.5 w-20 rounded-full bg-gray-400"></div>
+                  </div>
+                </div>
+              ) : pricePerGallon.isSuccess ? (
+                <span className="cursor-not-allowed ">
+                  {watch().pricePerGallon > 0 ? watch().pricePerGallon : 0}
                 </span>
               ) : (
-                <p className="cursor-not-allowed bg-slate-50 text-slate-500">
+                <p className="cursor-not-allowed ">
                   Generate quote to see price
                 </p>
               )}
@@ -180,7 +186,7 @@ const Newquote = () => {
               <button
                 className={`w-full rounded-2xl border-4 border-black bg-yellow-accent px-4 py-2 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:border-slate-900 disabled:bg-yellow-disabled disabled:text-zinc-900/80`}
                 onClick={handleSubmit(handleGetPricePerGallon)}
-                disabled={!isValid}
+                disabled={!isDirty}
               >
                 Get Quote
               </button>
