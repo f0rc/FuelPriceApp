@@ -19,7 +19,7 @@ const Newquote = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid, dirtyFields },
     watch,
     // setError, TODO
     setValue,
@@ -186,7 +186,9 @@ const Newquote = () => {
               <button
                 className={`w-full rounded-2xl border-4 border-black bg-yellow-accent px-4 py-2 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:border-slate-900 disabled:bg-yellow-disabled disabled:text-zinc-900/80`}
                 onClick={handleSubmit(handleGetPricePerGallon)}
-                disabled={!isDirty}
+                disabled={
+                  !dirtyFields.deliveryDate && !dirtyFields.gallonsRequested
+                }
               >
                 Get Quote
               </button>
