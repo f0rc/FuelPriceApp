@@ -3,11 +3,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ToolTip from "~/Components/ToolTip";
 import { newQuoteSchema, type newQuoteSchemaType } from "./newquoteSchema";
-
-// import { useSession } from "./auth/SessionProvider";
+import { useSession } from "../auth/SessionProvider";
 
 const Newquote = () => {
-  // const { session } = useSession();
+  const { session } = useSession();
   //TODO: add security check to see if a session exists else route to login
 
   const submitNewQuote = api.quote.submitQuote.useMutation({
@@ -37,7 +36,9 @@ const Newquote = () => {
   };
 
   // fetching user profile
-  const userProfile = api.auth.getUserAddress.useQuery();
+  const userProfile = api.auth.getUserAddress.useQuery(undefined, {
+    enabled: !!session?.sessionToken,
+  });
 
   const pricePerGallon = api.quote.getPricePerGallon.useMutation({
     onSuccess: (data) => {
@@ -111,13 +112,18 @@ const Newquote = () => {
               Delivery Address:
             </label>
             <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4">
-              {userProfile.isLoading ? (
+              {userProfile.isLoading &&
+              !(userProfile.fetchStatus === "idle") ? (
                 <div className="animate-pulse">
                   <div className="flex flex-col items-start justify-center gap-4">
                     <div className="mr-3 h-2.5 w-20 rounded-full bg-gray-400"></div>
                     <div className="h-2 w-24 rounded-full bg-gray-400"></div>
                   </div>
                 </div>
+              ) : userProfile.isError || userProfile.fetchStatus === "idle" ? (
+                <span className="animate-pulse text-red-600">
+                  something went wrong
+                </span>
               ) : (
                 <>
                   <span className="text-start">
