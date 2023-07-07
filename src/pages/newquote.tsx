@@ -2,6 +2,7 @@ import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ToolTip from "~/Components/ToolTip";
 // import { useSession } from "./auth/SessionProvider";
 
 export const newQuoteSchema = z.object({
@@ -193,21 +194,29 @@ const Newquote = () => {
           </div>
 
           <div className="mt-5 flex flex-col items-center justify-center gap-4">
-            <button
-              className={`w-full rounded-2xl border-4 border-black bg-yellow-accent px-4 py-2 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500`}
-              onClick={handleSubmit(handleGetPricePerGallon)}
-              disabled={!isValid}
+            <ToolTip
+              tooltip="Please fill out the form"
+              moreTailwindStyle="w-full"
             >
-              Get Quote
-            </button>
-
-            <button
-              onClick={handleSubmit(submitForm)}
-              className="w-full rounded-2xl border-4 border-black bg-yellow-accent p-4 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-700"
-              disabled={!pricePerGallon.isSuccess || !isValid}
-            >
-              Submit Order
-            </button>
+              <button
+                className={`w-full rounded-2xl border-4 border-black bg-yellow-accent px-4 py-2 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:border-slate-900 disabled:bg-yellow-disabled disabled:text-zinc-900/80`}
+                onClick={handleSubmit(handleGetPricePerGallon)}
+                disabled={!isValid}
+              >
+                Get Quote
+              </button>
+            </ToolTip>
+            <ToolTip tooltip='Click "Get Quote"' moreTailwindStyle="w-full">
+              <button
+                onClick={handleSubmit(submitForm)}
+                className="w-full rounded-2xl border-4 border-black bg-yellow-accent p-4 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:bg-yellow-disabled disabled:text-zinc-900/80"
+                disabled={!pricePerGallon.isSuccess || !isValid}
+                data-tooltip-target="tooltip-light"
+                data-tooltip-style="light"
+              >
+                Submit Order
+              </button>
+            </ToolTip>
           </div>
         </div>
         {/* <pre>{JSON.stringify(watch(), null, 2)}</pre> */}
