@@ -131,7 +131,7 @@ export const authRouter = createTRPCRouter({
   }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
-    console.log("cookie", ctx.req.headers.cookie);
+    console.log("cookie", ctx.req?.headers.cookie);
     console.log("money", ctx.session);
 
     if (!ctx.session || ctx.session.expires < new Date()) {
