@@ -33,7 +33,7 @@ export const authRouter = createTRPCRouter({
 
       if (existingUser) {
         throw new TRPCError({
-          code: "CONFLICT",
+          code: "FORBIDDEN",
           message: "Username already in use",
         });
       }
@@ -131,7 +131,7 @@ export const authRouter = createTRPCRouter({
   }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
-    console.log("cookie", ctx.req.headers.cookie);
+    console.log("cookie", ctx.req?.headers.cookie);
     console.log("money", ctx.session);
 
     if (!ctx.session || ctx.session.expires < new Date()) {
@@ -158,6 +158,28 @@ export const authRouter = createTRPCRouter({
 
     return {
       status: "success",
+    };
+  }),
+
+  // TODO: MOVE THIS TO PROFILE WHEN DONE
+  getUserAddress: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
+
+    const userAddress = await prisma.profile.findUnique({
+      where: {
+        userId: session.User.id,
+      },
+    });
+
+    console.log(userAddress);
+
+    return {
+      address: {
+        street: "123 main st",
+        city: "Houston",
+        state: "TX",
+        zipcode: "12345",
+      },
     };
   }),
 });

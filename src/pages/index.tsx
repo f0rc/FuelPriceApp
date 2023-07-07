@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   return (
@@ -9,7 +10,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="mx-28 flex justify-center">
-        <div className="min-w-7x w-full">
+        <div className="min-w-7x w-full max-w-[95rem]">
           <div className="relative">
             <div className="pointer-events-none absolute left-0 top-0 z-0 flex flex-col items-start justify-center pt-10 opacity-40 blur-md">
               <h1 className="text-center text-7xl font-bold drop-shadow-2xl ">
@@ -33,7 +34,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="ml-2 mt-5 flex flex-row">
-            <button className="group flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color hover:bg-yellow-300 focus:ring-4">
+            <Link href={"/newquote"} className="group flex flex-row items-center gap-3 rounded-full border-4 border-dark-color bg-yellow-accent px-4 py-3 align-middle text-2xl font-bold text-dark-color hover:bg-yellow-300 focus:ring-4">
               Get My Quote Now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +50,7 @@ const Home: NextPage = () => {
                   d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                 />
               </svg>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,6 +1,34 @@
-import React from "react";
 import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export const SignupSchema = z
+  .object({
+    username: z
+      .string()
+      .nonempty({
+        message: "Username is required",
+      })
+      .min(2, "Username must contain at least 2 characters")
+      .max(50, "Username must contain at most 50 characters"),
+    password: z
+      .string()
+      .nonempty({
+        message: "Password is required",
+      })
+      .min(8, "Password must contain at least 8 characters")
+      .max(50, "Password must contain at most 50 characters"),
+    passwordVerify: z.string().nonempty({
+      message: "Password is required",
+    }),
+  })
+  .refine((data) => data.password === data.passwordVerify, {
+    path: ["passwordVerify"],
+    message: "Passwords do not match",
+  });
+
+export type SignupSchemaType = z.infer<typeof SignupSchema>;
 
 const Signup = () => {
   const {
@@ -8,17 +36,25 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm({
-    defaultValues: {
-      username: "",
-      password: "",
-      passwordVerify: "",
-    },
+    setError,
+  } = useForm<SignupSchemaType>({
+    resolver: zodResolver(SignupSchema),
   });
 
   const { mutateAsync } = api.auth.signUp.useMutation({
     onSuccess: () => {
       console.log("success");
+    },
+    onError: (e) => {
+      if (e.data?.code === "FORBIDDEN") {
+        setError("root.serverError", {
+          message: e.message,
+        });
+      } else {
+        setError("root.serverError", {
+          message: "Something went wrong",
+        });
+      }
     },
   });
 
@@ -44,14 +80,21 @@ const Signup = () => {
 
   return (
     <div className="mt-14 flex justify-center align-middle">
-      <div className="min-w-fit border-4 border-black p-10">
+      <div className="w-full  max-w-md border-4 border-black p-10">
         <h1 className="mb-10 text-center">
           <span className="text-3xl font-bold">Sign up to [FUEL]</span>
         </h1>
 
         <form className="grid grid-cols-1 gap-4" onSubmit={onSubmit}>
           <div className="flex flex-col gap-1">
-            <p>{errors.username?.message}</p>
+            {errors.root ? (
+              <p className="text-sm text-red-500">
+                {errors.root.serverError?.message}
+              </p>
+            ) : (
+              ""
+            )}
+            <p className="text-sm text-red-500">{errors.username?.message}</p>
             <label className="text-xs font-semibold uppercase">Username:</label>
             <input
               type="text"
@@ -64,7 +107,7 @@ const Signup = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <p>{errors.password?.message}</p>
+            <p className="text-sm text-red-500">{errors.password?.message}</p>
             <label className="text-xs font-semibold uppercase">password:</label>
             <input
               type="password"
@@ -76,7 +119,9 @@ const Signup = () => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <p>{errors.passwordVerify?.message}</p>
+            <p className="text-sm text-red-500">
+              {errors.passwordVerify?.message}
+            </p>
             <label className="text-xs font-semibold uppercase">
               verify password:
             </label>

@@ -6,15 +6,16 @@ export const getServerAuthSession = async (ctx: {
   req: CreateHTTPContextOptions["req"];
   res: CreateHTTPContextOptions["res"];
 }): Promise<ServerSession | null> => {
-  const sessionId = ctx.req.headers.cookie
+  const rawSessionCookie = ctx.req.headers.cookie
     ?.split(";")
     .map((cookie) => cookie.trim())
     .find((cookie) => cookie.startsWith("auth-session-id="))
     ?.split("=")[1];
 
-  if (sessionId) {
-    const session = await validateSession(sessionId);
+  if (rawSessionCookie) {
+    const session = await validateSession(rawSessionCookie);
     if (session) {
+      // here we verified that the session is valid so now we can get user info
       const user = await prisma.user.findUnique({
         where: {
           id: session.userId,
@@ -23,9 +24,12 @@ export const getServerAuthSession = async (ctx: {
       if (user) {
         return {
           id: user.id,
-          username: user.username,
           expires: session.expires,
           sessionToken: session.sessionToken,
+          User: {
+            id: user.id,
+            username: user.username,
+          }
         };
       }
     }
@@ -33,16 +37,16 @@ export const getServerAuthSession = async (ctx: {
   return null;
 };
 
-export const validateSession = async (sessionId: string) => {
+export const validateSession = async (rawSessionCookie: string) => {
   const session = await prisma.session.findUnique({
     where: {
-      sessionToken: sessionId,
+      sessionToken: rawSessionCookie,
     },
   });
 
   if (session) {
     if (session.expires < new Date()) {
-      return;
+      return null;
     }
   }
 
