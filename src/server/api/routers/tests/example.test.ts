@@ -3,9 +3,8 @@ import { type AppRouter, appRouter } from "../../root";
 import type { IncomingMessage, ServerResponse } from "http"; // Import the required types for req and res
 import { type inferProcedureInput } from "@trpc/server";
 import { mockDeep } from "jest-mock-extended";
-import type { Example, PrismaClient, Session } from "@prisma/client";
-import { randomUUID } from "crypto";
-import { ServerSession } from "~/server/auth";
+import type { Example, PrismaClient } from "@prisma/client";
+import { type ServerSession } from "~/server/auth";
 
 test("hello test", async () => {
   const req = {} as IncomingMessage; // dummy request object
