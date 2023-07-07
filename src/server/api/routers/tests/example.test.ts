@@ -1,14 +1,14 @@
 import { prisma } from "~/server/db";
 import { type AppRouter, appRouter } from "../../root";
-import type { IncomingMessage, ServerResponse } from "http"; // Import the required types for req and res
+import type { IncomingMessage, ServerResponse } from "http";
 import { type inferProcedureInput } from "@trpc/server";
 import { mockDeep } from "jest-mock-extended";
 import type { Example, PrismaClient } from "@prisma/client";
 import { type ServerSession } from "~/server/auth";
 
 test("hello test", async () => {
-  const req = {} as IncomingMessage; // dummy request object
-  const res = {} as ServerResponse; // dummy response object
+  const req = {} as IncomingMessage; // fake request object
+  const res = {} as ServerResponse; // fake request object
 
   const caller = appRouter.createCaller({
     session: null,
@@ -58,8 +58,8 @@ test("mock db example test", async () => {
 });
 
 test("auth example test", async () => {
-  const req = {} as IncomingMessage; // dummy request object
-  const res = {} as ServerResponse; // dummy response object
+  const req = {} as IncomingMessage; // fake request object
+  const res = {} as ServerResponse; // fake request object
 
   const mockSession: ServerSession = {
     expires: new Date(),
