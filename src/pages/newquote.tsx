@@ -2,11 +2,31 @@ import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ToolTip from "~/Components/ToolTip";
-import {
-  newQuoteSchema,
-  type newQuoteSchemaType,
-} from "~/server/api/routers/quote";
+import { z } from "zod";
+
 // import { useSession } from "./auth/SessionProvider";
+
+export const newQuoteSchema = z.object({
+  gallonsRequested: z
+    .number({
+      invalid_type_error: "Please enter only numbers",
+    })
+    .nonnegative("must request at least 1 gallon(s)")
+    .min(1, "must request at least 1 gallon(s)"),
+  deliveryDate: z.coerce.date().refine(
+    (data) => {
+      // console.log("ZOD", data, new Date(new Date().setHours(0, 0, 0, 0)));
+      return data > new Date(new Date().setHours(0, 0, 0, 0));
+    },
+    {
+      message: "Delivery must be 24hrs in the future",
+    }
+  ),
+  pricePerGallon: z.number().multipleOf(0.0001).default(0),
+  total: z.number().multipleOf(0.0001).default(0),
+});
+
+export type newQuoteSchemaType = z.infer<typeof newQuoteSchema>;
 
 const Newquote = () => {
   // const { session } = useSession();
