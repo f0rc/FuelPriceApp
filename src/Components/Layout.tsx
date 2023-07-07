@@ -5,7 +5,7 @@ import { useSession } from "~/pages/auth/SessionProvider";
 import { api } from "~/utils/api";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const {session} = useSession();
+  const { session } = useSession();
   // const router = useRouter();
 
   const { mutateAsync } = api.auth.logout.useMutation({
@@ -18,47 +18,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const handleLogout = async () => {
     await mutateAsync();
   };
-
-  const baseRoutes = [
-    { path: "/", label: "Home", isNav: false },
-    { path: "signup", label: "Signup", isNav: false },
-    { path: "login", label: "Login", isNav: false },
-    { path: "/about", label: "About", isNav: true },
-  ]
-
-  const authRoutes = [
-    
-    { path: "/newquote", label: "New Quote", isNav: true },
-    { path: "/history", label: "Quote History", isNav: true },
-    
-    { path: "/profile", label: "Profile", isNav: true },
-    ...baseRoutes,
-  ]
-
   return (
     <div className="flex min-h-screen flex-col bg-[#EFEFF1]">
-      <nav className="flex h-20 flex-row border-b border-black justify-center">
-        <div className="flex w-full items-center justify-between max-w-[95rem]">
-          <ul className="flex flex-row gap-4 text-xl font-medium text-center align-middle items-center">
-            <Link href="/" className="pr-4 text-2xl font-semibold mb-1">
+      <nav className="flex h-20 flex-row justify-center border-b border-black">
+        <div className="flex w-full max-w-[95rem] items-center justify-between">
+          <ul className="flex flex-row items-center gap-4 text-center align-middle text-xl font-medium">
+            <Link href="/" className="mb-1 pr-4 text-2xl font-semibold">
               [FUEL]
             </Link>
-            {(session && session.sessionToken) ? (
-                authRoutes.filter((route) => route.isNav).map((route) => (
-                  <li key={route.path}>
-                    <Link href={route.path} className="pr-4 text-xl">
-                      {route.label}
-                    </Link>
-                  </li>
-                ))
-              ) : baseRoutes.filter((route) => route.isNav).map((route) => (
-                <li key={route.path}>
-                  <Link href={route.path} className="pr-4 text-xl">
-                    {route.label}
-                  </Link>
-                </li>
-              ))
-            }
+            <Link href="/newquote">New Quote</Link>
+            <Link href="/history">Quote History</Link>
+            <Link href="/about">About</Link>
+            <Link href="/profile">Profile</Link>
           </ul>
 
           {
