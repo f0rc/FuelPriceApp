@@ -2,20 +2,11 @@ import { newQuoteSchema } from "~/pages/newquote";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const quoteRouter = createTRPCRouter({
-  getPreNewQuote: protectedProcedure
-    .input(newQuoteSchema)
-    .mutation(({ input }) => {
-      const { gallonsRequested } = input;
-
-      return {
-        pricePerGallon: gallonsRequested * 1.5, //
-      };
-    }),
-
   getPricePerGallon: protectedProcedure
     .input(newQuoteSchema)
     .mutation(({ input }) => {
       const { gallonsRequested } = input;
+      console.log("HHHHHHHHHHHHHH", gallonsRequested * 1.52314);
 
       return {
         total: gallonsRequested * 1.5,
@@ -23,5 +14,17 @@ export const quoteRouter = createTRPCRouter({
       };
     }),
 
-  // TODO: create submit quote
+  // TODO: finitsh this for final assignment
+  submitQuote: protectedProcedure
+    .input(newQuoteSchema)
+    .mutation(({ input }) => {
+      const { gallonsRequested } = input;
+
+      console.log("HHHHHHHHHHHHHH", gallonsRequested * 1.52314);
+
+      return {
+        total: gallonsRequested * 1.52314,
+        suggestedPrice: 1.5,
+      };
+    }),
 });
