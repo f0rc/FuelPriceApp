@@ -9,9 +9,13 @@ export const profileRouter = createTRPCRouter({
       const {address1, address2, fullName, city, state, zipcode } = input;
       const {session } = ctx;
 
-      const profile = await prisma.profile.create({
-        data: {
+      const profile = await prisma.profile.upsert({
+        where: {userId: session.id},
+        create: {
+            
+
             address1: address1,
+            
             address2: address2,
             name: fullName,
             city: city,
@@ -19,7 +23,18 @@ export const profileRouter = createTRPCRouter({
             zipcode: zipcode,
             user: {connect:{ id: session.id}},
             address: "someting",
-        }
+        },
+        update: {
+            address1: address1,
+            
+            address2: address2,
+            name: fullName,
+            city: city,
+            state: 'AK',
+            zipcode: zipcode,
+            user: {connect:{ id: session.id}},
+            address: "someting",
+        },
       })
       //TODO: make sure that the number is rounded to .001
       return {
