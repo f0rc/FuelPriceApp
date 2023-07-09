@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { newQuoteSchema } from "~/pages/newquote/newquoteSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -27,4 +28,24 @@ export const quoteRouter = createTRPCRouter({
         suggestedPrice: 1.5,
       };
     }),
+
+  getQuoteHistory: protectedProcedure.query(async ({ ctx }) => {
+    const quotes = await ctx.prisma.quote.findMany({
+      where: {
+        userId: ctx.session.User.id,
+      },
+    });
+
+    if (!quotes) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "NO QUOTES FOUND",
+      });
+    }
+
+    return {
+      status: "success",
+      quoteList: quotes,
+    };
+  }),
 });
