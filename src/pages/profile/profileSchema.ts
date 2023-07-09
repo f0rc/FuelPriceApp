@@ -1,6 +1,8 @@
+import { PrismaClient, State } from "@prisma/client";
 import { z } from "zod";
 
-export const STATES = [
+
+export enum STATES {
     "AK",
     "AL",
     "AR",
@@ -56,7 +58,7 @@ export const STATES = [
     "WI",
     "WV",
     "WY",
-  ] as const;
+ } 
 
 
 
@@ -66,7 +68,7 @@ export const profileSchema = z.object({
   address2: z.string().max(100).optional(),
   city:z.string({ required_error: "City is required" }).max(100),
   // be careful, enum or string?
-  state: z.enum(STATES),
+  state: z.nativeEnum(State),
   zipcode: z.string().min(5).max(9),
 });
 

@@ -1,6 +1,8 @@
 import { profileSchema } from "~/pages/profile/profileSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+import { PrismaClient } from '@prisma/client'
+
 
 export const profileRouter = createTRPCRouter({
   createProfile: protectedProcedure
@@ -19,10 +21,10 @@ export const profileRouter = createTRPCRouter({
             address2: address2,
             name: fullName,
             city: city,
-            state: 'AK',
+            state: state,
             zipcode: zipcode,
             user: {connect:{ id: session.id}},
-            address: "someting",
+            address: [address1 ,address2].join(' ')
         },
         update: {
             address1: address1,
@@ -30,10 +32,10 @@ export const profileRouter = createTRPCRouter({
             address2: address2,
             name: fullName,
             city: city,
-            state: 'AK',
+            state: state,
             zipcode: zipcode,
             user: {connect:{ id: session.id}},
-            address: "someting",
+            address: [address1 ,address2].join(' '),
         },
       })
       //TODO: make sure that the number is rounded to .001
