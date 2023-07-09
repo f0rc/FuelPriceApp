@@ -24,6 +24,9 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -32,11 +35,15 @@ model User {
     password String
     sessions Session[]
     profile  Profile?
+    Quote    Quote[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Profile {
-    id       String  @id @default(cuid())
-    user     User    @relation(fields: [userId], references: [id])
+    id String @id @default(cuid())
+
     userId   String  @unique
     name     String  @db.VarChar(50)
     address1 String  @db.VarChar(100)
@@ -45,21 +52,26 @@ model Profile {
     state    State   @default(AL)
     // no support in Prisma for min length, implement in front-end
     zipcode  String  @db.VarChar(9)
-    // one to many
-    quotes   Quote[]
     address  String
+
+    user User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Quote {
-    id             Int      @id @unique @default(autoincrement())
-    userProfile    Profile  @relation(fields: [userId], references: [userId])
-    userId         String
-    gallonsReq     Decimal  @db.Decimal(5, 2)
-    // Since address2 is optional, don't forget to add in address2 in backend
-    address1       String
-    deliveryDate   DateTime
-    suggestedPrice Decimal
-    total          Decimal
+    id               String   @id @unique @default(cuid())
+    userId           String
+    gallonsRequested Decimal
+    deliveryDate     DateTime
+    pricePerGallon   Decimal
+    total            Decimal
+
+    user User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum State {

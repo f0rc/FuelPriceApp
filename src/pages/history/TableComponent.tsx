@@ -22,15 +22,15 @@ import { useState } from "react";
 const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
   const TableColumns: ColumnDef<Quote>[] = [
     {
-      accessorKey: "gallonsReq",
+      accessorKey: "gallonsRequested",
       header: "Gallon(s)",
     },
     {
-      accessorKey: "suggestedPrice",
+      accessorKey: "pricePerGallon",
       header: "Price per Gallon",
     },
     {
-      accessorKey: "totalamtDue",
+      accessorKey: "total",
       header: "Order Total",
     },
     {
