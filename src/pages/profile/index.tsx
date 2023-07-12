@@ -1,66 +1,97 @@
 import React from "react";
+import { api } from "~/utils/api";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ToolTip from "~/Components/ToolTip";
+import { profileSchema, type profileSchemaType } from "./profileSchema";
 
+export const STATES = [
+  "AK",
+  "AL",
+  "AR",
+  "AS",
+  "AZ",
+  "CA",
+  "CO",
+  "CT",
+  "DC",
+  "DE",
+  "FL",
+  "GA",
+  "GU",
+  "HI",
+  "IA",
+  "ID",
+  "IL",
+  "IN",
+  "KS",
+  "KY",
+  "LA",
+  "MA",
+  "MD",
+  "ME",
+  "MI",
+  "MN",
+  "MO",
+  "MS",
+  "MT",
+  "NC",
+  "ND",
+  "NE",
+  "NH",
+  "NJ",
+  "NM",
+  "NV",
+  "NY",
+  "OH",
+  "OK",
+  "OR",
+  "PA",
+  "PR",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VA",
+  "VI",
+  "VT",
+  "WA",
+  "WI",
+  "WV",
+  "WY",
+] as const;
 const Profile = () => {
-  const STATES = [
-    "AK",
-    "AL",
-    "AR",
-    "AS",
-    "AZ",
-    "CA",
-    "CO",
-    "CT",
-    "DC",
-    "DE",
-    "FL",
-    "GA",
-    "GU",
-    "HI",
-    "IA",
-    "ID",
-    "IL",
-    "IN",
-    "KS",
-    "KY",
-    "LA",
-    "MA",
-    "MD",
-    "ME",
-    "MI",
-    "MN",
-    "MO",
-    "MS",
-    "MT",
-    "NC",
-    "ND",
-    "NE",
-    "NH",
-    "NJ",
-    "NM",
-    "NV",
-    "NY",
-    "OH",
-    "OK",
-    "OR",
-    "PA",
-    "PR",
-    "RI",
-    "SC",
-    "SD",
-    "TN",
-    "TX",
-    "UT",
-    "VA",
-    "VI",
-    "VT",
-    "WA",
-    "WI",
-    "WV",
-    "WY",
-  ];
+  const submitForm = api.profile.createProfile.useMutation({
+    onSuccess: () => {
+      console.log("Success");
+    },
+  })
+  const submitFormasync = async (data: profileSchemaType) => {
+    try {
+      console.log(data);
+      await submitForm.mutateAsync(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+    setValue,
+  } = useForm<profileSchemaType>({
+    resolver: zodResolver(profileSchema),
+  });
+  
+  console.log("errors", errors);
 
   return (
-    <form action="/">
+    <form action="/" onSubmit={handleSubmit(submitFormasync)}>
       <div className="mt-14 flex justify-center align-middle">
         <div className="min-w-fit border-4 border-black p-10">
           <h1 className="mb-10 text-center">
@@ -68,6 +99,9 @@ const Profile = () => {
           </h1>
           <div className="grid gap-4">
             <div className="flex flex-col gap-1">
+            <p className="text-sm text-red-500">
+              {errors.fullName?.message}
+            </p>
               <label
                 htmlFor="fullName"
                 className="text-xs font-semibold uppercase"
@@ -76,8 +110,10 @@ const Profile = () => {
               </label>
               <input
                 type="text"
-                name="fullName"
+                {...register("fullName")}
+                
                 id="fullName"
+                
                 required
                 maxLength={50}
                 placeholder="John/Jane Doe"
@@ -94,6 +130,7 @@ const Profile = () => {
               </label>
               <input
                 type="text"
+                {...register("address1")}
                 name="address1"
                 id="address1"
                 required
@@ -110,6 +147,7 @@ const Profile = () => {
               </label>
               <input
                 type="text"
+                {...register("address2")}
                 name="address2"
                 id="address2"
                 maxLength={100}
@@ -123,6 +161,7 @@ const Profile = () => {
               </label>
               <input
                 type="text"
+                {...register("city")}
                 name="city"
                 id="city"
                 required
@@ -138,7 +177,11 @@ const Profile = () => {
               >
                 State:
               </label>
-              <select id="state" defaultValue={"DEFAULT"}>
+              <select
+                {...register("state")}
+                id="state"
+                defaultValue={"DEFAULT"}
+              >
                 <option value="DEFAULT" disabled>
                   State
                 </option>
@@ -160,6 +203,7 @@ const Profile = () => {
               </label>
               <input
                 type="text"
+                {...register("zipcode")}
                 name="zipcode"
                 id="zipcode"
                 required
