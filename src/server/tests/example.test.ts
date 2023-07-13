@@ -1,5 +1,5 @@
 import { prisma } from "~/server/db";
-import { type AppRouter, appRouter } from "../../root";
+import { type AppRouter, appRouter } from "../api/root";
 import type { IncomingMessage, ServerResponse } from "http";
 import { type inferProcedureInput } from "@trpc/server";
 import { mockDeep } from "jest-mock-extended";

@@ -14,6 +14,7 @@ import { prisma } from "~/server/db";
 import { type CreateHTTPContextOptions } from "@trpc/server/adapters/standalone";
 import { type ServerSession } from "../auth";
 import { getServerAuthSession } from "~/utils/session";
+import { type PrismaClient } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -27,6 +28,7 @@ type CreateContextOptions = {
   session: ServerSession | null;
   req: CreateHTTPContextOptions["req"];
   res: CreateHTTPContextOptions["res"];
+  prisma?: PrismaClient;
 };
 
 /**
@@ -39,11 +41,11 @@ type CreateContextOptions = {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   const { req, res } = _opts;
   return {
     session: _opts.session,
-    prisma,
+    prisma: _opts.prisma || prisma,
     req,
     res,
   };

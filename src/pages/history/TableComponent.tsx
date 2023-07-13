@@ -2,7 +2,7 @@ import type { Quote } from "@prisma/client";
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -14,7 +14,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  SortingState,
+  type SortingState,
   getSortedRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table";
@@ -22,6 +22,32 @@ import { useState } from "react";
 
 const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
   const TableColumns: ColumnDef<Quote>[] = [
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={table.getIsAllPageRowsSelected()}
+    //       onChange={(value) => {
+    //         // console.log("VALUR", value.target.checked);
+    //         table.toggleAllRowsSelected(!!value.target.checked);
+    //       }}
+    //       aria-label="Select all"
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={row.getIsSelected()}
+    //       onChange={(value) => {
+    //         // console.log("VALUR", value.target.checked);
+    //         row.toggleSelected(!!value.target.checked);
+    //       }}
+    //       aria-label="Select row"
+    //     />
+    //   ),
+    //   enableSorting: false,
+    // },
     {
       accessorKey: "gallonsRequested",
       header: ({ column }) => {
@@ -38,6 +64,14 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           </button>
         );
       },
+      cell: ({ row }) => {
+        const gallonsRequested = parseFloat(row.getValue("gallonsRequested"));
+        const formatted = new Intl.NumberFormat("en-US").format(
+          gallonsRequested
+        );
+
+        return <div className="">{formatted}</div>;
+      },
     },
     {
       accessorKey: "pricePerGallon",
@@ -49,6 +83,15 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
             Price Per Gallon
           </button>
         );
+      },
+      cell: ({ row }) => {
+        const pricePerGallon = parseFloat(row.getValue("pricePerGallon"));
+        const formatted = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(pricePerGallon);
+
+        return <div className="">{formatted}</div>;
       },
     },
     {
@@ -62,6 +105,15 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           </button>
         );
       },
+      cell: ({ row }) => {
+        const total = parseFloat(row.getValue("total"));
+        const formatted = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(total);
+
+        return <div className="">{formatted}</div>;
+      },
     },
     {
       accessorKey: "deliveryDate",
@@ -74,10 +126,15 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           </button>
         );
       },
+      cell: ({ row }) => {
+        // console.log(row.original.deliveryDate);
+        return <span>{row.original.deliveryDate.toLocaleDateString()}</span>;
+      },
     },
   ];
 
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data: tableData,
@@ -86,14 +143,16 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
+      rowSelection,
     },
   });
 
   return (
     <div className="container items-center justify-center border-2 border-black">
-      <div className="flex flex-col justify-center">
+      <div className="flex flex-col justify-center pt-4">
         <Table className="">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

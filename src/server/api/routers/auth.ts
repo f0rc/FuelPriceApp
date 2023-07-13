@@ -40,12 +40,16 @@ export const authRouter = createTRPCRouter({
 
       const hashedPassword = await hash(password);
 
+      // console.log("HASHED", hashedPassword);
+
       const result = await prisma.user.create({
         data: {
           username,
           password: hashedPassword,
         },
       });
+
+      // console.log("RESULT", result);
 
       if (!result) {
         throw new TRPCError({
@@ -120,6 +124,7 @@ export const authRouter = createTRPCRouter({
 
     return {
       status: "success",
+      message: "User logged in",
     };
   }),
 
@@ -171,7 +176,7 @@ export const authRouter = createTRPCRouter({
       },
     });
 
-    console.log(userAddress);
+    console.log(userAddress?.address);
 
     return {
       address: {
