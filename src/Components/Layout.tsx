@@ -29,7 +29,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/newquote">New Quote</Link>
             <Link href="/history">Quote History</Link>
             <Link href="/about">About</Link>
-            <Link href="/profile/main">Profile</Link>
+            <Link href="/profile">Profile</Link>
           </ul>
 
           {

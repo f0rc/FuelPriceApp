@@ -39,13 +39,13 @@ const index = ({
       
         {quotings.map((quote) => (
           <TableRow key={quote.id}>
-           <TableCell className="text-center font-medium">
+           <TableCell className="text-center font-medium w-[5000px]">
             {quote.id}
             </TableCell>
-            <TableCell className="text-center">{quote.gallonsreq}</TableCell>
-            <TableCell className="text-center">{quote.address1}</TableCell>
-            <TableCell className="text-center">{quote.deliveryDate}</TableCell>
-            <TableCell className="text-center">
+            <TableCell className="text-center w-[500px]">{quote.gallonsreq}</TableCell>
+            <TableCell className="text-center w-[500px]">{quote.address1}</TableCell>
+            <TableCell className="text-center w-[500px]">{quote.deliveryDate}</TableCell>
+            <TableCell className="text-center w-[500px]">
               {quote.suggestedPrice}
             </TableCell>
             <TableCell className="text-center">{quote.totalDue}</TableCell>
