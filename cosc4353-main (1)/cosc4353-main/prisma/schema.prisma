@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// test comment to see if push works
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id       String    @id @default(cuid())
+    username String    @unique
+    password String
+    sessions Session[]
+    profile  Profile?
+}
+
+model Example {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Profile {
+    id       Int     @default(autoincrement())
+    user     User    @relation(fields: [userId], references: [id])
+    userId   String  @unique
+    name     String  @db.VarChar(50)
+    address1 String  @db.VarChar(100)
+    address2 String? @db.VarChar(100)
+    city     String  @db.VarChar(100)
+    state    State   @default(AL)
+    // no support in Prisma for min length, implement in front-end
+    zipcode  String  @db.VarChar(9)
+    // one to many
+    quotes   Quote[]
+    address  String
+
+    @@id([id, address1])
+}
+
+model Quote {
+    id             Int      @id @default(autoincrement())
+    profile        Profile  @relation(fields: [quoteID, address1], references: [id, address1])
+    quoteID        Int      @unique
+    gallonsReq     Decimal  @db.Decimal(5, 2)
+    // Since address2 is optional, don't forget to add in address2 in backend
+    address1       String
+    deliveryDate   DateTime
+    suggestedPrice Decimal
+    totalamtDue    Decimal
+
+    @@unique([id, address1])
+}
+
+enum State {
+    AL
+    AK
+    AZ
+    AR
+    CA
+    CO
+    CT
+    DE
+    FL
+    GA
+    HI
+    ID
+    IL
+    IN
+    IA
+    KS
+    KY
+    LA
+    ME
+    MD
+    MA
+    MI
+    MN
+    MS
+    MO
+    MT
+    NE
+    NV
+    NH
+    NJ
+    NM
+    NY
+    NC
+    ND
+    OH
+    OK
+    OR
+    PA
+    RI
+    SC
+    SD
+    TN
+    TX
+    UT
+    VT
+    VA
+    WA
+    WV
+    WI
+    WY
+}
