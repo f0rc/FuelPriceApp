@@ -1,7 +1,6 @@
 import type { InferGetStaticPropsType, GetStaticProps } from "next";
 import path from "path";
 import fs from "fs/promises";
-import Link from "next/link";
 import { type QuoteProps, type QuotesListProps } from "~/Components/QuoteList";
 import {
   Table,
@@ -12,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "./table";
-
 
 const index = ({
   quotings,
@@ -33,14 +31,11 @@ const index = ({
           <TableHead className="text-center">Total Due Amount</TableHead>
         </TableRow>
       </TableHeader>
-      
-      <Link href="/quotedetails" target="_blank">
       <TableBody>
-      
         {quotings.map((quote) => (
           <TableRow key={quote.id}>
-           <TableCell className="text-center font-medium">
-            {quote.id}
+            <TableCell className="text-center font-medium">
+              {quote.id}
             </TableCell>
             <TableCell className="text-center">{quote.gallonsreq}</TableCell>
             <TableCell className="text-center">{quote.address1}</TableCell>
@@ -51,16 +46,10 @@ const index = ({
             <TableCell className="text-center">{quote.totalDue}</TableCell>
           </TableRow>
         ))}
-        
       </TableBody>
-      </Link>
-      
     </Table>
-    
   );
-  
 };
-
 
 export const getStaticProps: GetStaticProps<{
   quotings: QuoteProps[];
