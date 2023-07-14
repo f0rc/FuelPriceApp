@@ -36,14 +36,13 @@ const Newquote = () => {
   };
 
   // fetching user profile
-  const userProfile = api.auth.getUserAddress.useQuery(undefined, {
+  const userProfile = api.profile.getUserAddress.useQuery(undefined, {
     enabled: !!session?.sessionToken,
   });
 
   const pricePerGallon = api.quote.getPricePerGallon.useMutation({
     onSuccess: (data) => {
       setValue("pricePerGallon", data.suggestedPrice);
-      console.log("++++++++++++++++", data);
       setValue("total", data.total);
     },
   });
@@ -120,9 +119,13 @@ const Newquote = () => {
                     <div className="h-2 w-24 rounded-full bg-gray-400"></div>
                   </div>
                 </div>
-              ) : userProfile.isError || userProfile.fetchStatus === "idle" ? (
+              ) : userProfile.isError ? (
                 <span className="animate-pulse text-red-600">
                   something went wrong
+                </span>
+              ) : !session?.id ? (
+                <span className="animate-pulse text-red-600">
+                  please log in
                 </span>
               ) : (
                 <>
@@ -193,7 +196,9 @@ const Newquote = () => {
                 className={`w-full rounded-2xl border-4 border-black bg-yellow-accent px-4 py-2 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:border-slate-900 disabled:bg-yellow-disabled disabled:text-zinc-900/80`}
                 onClick={handleSubmit(handleGetPricePerGallon)}
                 disabled={
-                  !dirtyFields.deliveryDate && !dirtyFields.gallonsRequested
+                  (!dirtyFields.deliveryDate &&
+                    !dirtyFields.gallonsRequested) ||
+                  !!!session?.id
                 }
               >
                 Get Quote

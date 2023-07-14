@@ -1,8 +1,7 @@
+import { TRPCError } from "@trpc/server";
 import { profileSchema } from "~/pages/profile/profileSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
-import { PrismaClient } from "@prisma/client";
-import { z } from "zod";
 
 export const profileRouter = createTRPCRouter({
   createProfile: protectedProcedure
@@ -41,29 +40,40 @@ export const profileRouter = createTRPCRouter({
         profile,
       };
     }),
-  profileById: protectedProcedure
-    
-    .query(async ({ ctx }) => {
-      const { session } = ctx;
-      const profile = await prisma.profile.findUnique({
-        where: { userId: session.id },
+  profileById: protectedProcedure.query(async ({ ctx }) => {
+    const { session } = ctx;
+    const profile = await prisma.profile.findUnique({
+      where: { userId: session.id },
+    });
+    return {
+      profile,
+    };
+  }),
+
+  getUserAddress: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
+
+    const profile = await prisma.profile.findUnique({
+      where: {
+        userId: session.User.id,
+      },
+    });
+
+    if (!profile)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Something went wrong",
       });
-      return {
-        profile,
-      };
-    }),
 
-  // TODO: finitsh this for final assignment
-  //   submitQuote: protectedProcedure
-  //     .input(profileSchema)
-  //     .mutation(({ input }) => {
-  //       const { gallonsRequested } = input;
-
-  //       // call db to insert into it
-
-  //       return {
-  //         total: gallonsRequested * 1.5,
-  //         suggestedPrice: 1.5,
-  //       };
-  //     }),
+    return {
+      status: "success",
+      address: {
+        street: profile.address1,
+        street2: profile.address2,
+        city: profile.city,
+        state: profile.state,
+        zipcode: profile.zipcode,
+      },
+    };
+  }),
 });
