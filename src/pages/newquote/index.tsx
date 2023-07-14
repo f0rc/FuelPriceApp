@@ -3,11 +3,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ToolTip from "~/Components/ToolTip";
 import { newQuoteSchema, type newQuoteSchemaType } from "./newquoteSchema";
-
-// import { useSession } from "./auth/SessionProvider";
+import { useSession } from "../auth/SessionProvider";
 
 const Newquote = () => {
-  // const { session } = useSession();
+  const { session } = useSession();
   //TODO: add security check to see if a session exists else route to login
 
   const submitNewQuote = api.quote.submitQuote.useMutation({
@@ -19,7 +18,7 @@ const Newquote = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, dirtyFields },
     watch,
     // setError, TODO
     setValue,
@@ -37,12 +36,13 @@ const Newquote = () => {
   };
 
   // fetching user profile
-  const userProfile = api.auth.getUserAddress.useQuery();
+  const userProfile = api.profile.getUserAddress.useQuery(undefined, {
+    enabled: !!session?.sessionToken,
+  });
 
   const pricePerGallon = api.quote.getPricePerGallon.useMutation({
     onSuccess: (data) => {
       setValue("pricePerGallon", data.suggestedPrice);
-      console.log("++++++++++++++++", data);
       setValue("total", data.total);
     },
   });
@@ -103,7 +103,7 @@ const Newquote = () => {
               placeholder="12/12/2023"
             />
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex cursor-not-allowed flex-col gap-1">
             <label
               htmlFor="fuelType"
               className="text-xs font-semibold uppercase"
@@ -111,13 +111,22 @@ const Newquote = () => {
               Delivery Address:
             </label>
             <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4">
-              {userProfile.isLoading ? (
+              {userProfile.isLoading &&
+              !(userProfile.fetchStatus === "idle") ? (
                 <div className="animate-pulse">
                   <div className="flex flex-col items-start justify-center gap-4">
                     <div className="mr-3 h-2.5 w-20 rounded-full bg-gray-400"></div>
                     <div className="h-2 w-24 rounded-full bg-gray-400"></div>
                   </div>
                 </div>
+              ) : userProfile.isError ? (
+                <span className="animate-pulse text-red-600">
+                  something went wrong
+                </span>
+              ) : !session?.id ? (
+                <span className="animate-pulse text-red-600">
+                  please log in
+                </span>
               ) : (
                 <>
                   <span className="text-start">
@@ -140,12 +149,18 @@ const Newquote = () => {
               Price Per Gallon:
             </label>
             <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4">
-              {pricePerGallon.isSuccess ? (
-                <span className="cursor-not-allowed bg-slate-50 text-slate-500">
-                  money
+              {pricePerGallon.isLoading ? (
+                <div className="animate-pulse">
+                  <div className="flex flex-col items-start justify-center gap-4">
+                    <div className="mr-3 h-2.5 w-20 rounded-full bg-gray-400"></div>
+                  </div>
+                </div>
+              ) : pricePerGallon.isSuccess ? (
+                <span className="cursor-not-allowed ">
+                  {watch().pricePerGallon > 0 ? watch().pricePerGallon : 0}
                 </span>
               ) : (
-                <p className="cursor-not-allowed bg-slate-50 text-slate-500">
+                <p className="cursor-not-allowed ">
                   Generate quote to see price
                 </p>
               )}
@@ -180,7 +195,11 @@ const Newquote = () => {
               <button
                 className={`w-full rounded-2xl border-4 border-black bg-yellow-accent px-4 py-2 text-xl font-semibold uppercase transition-all delay-100 ease-in-out hover:bg-yellow-300 disabled:cursor-not-allowed disabled:border-slate-900 disabled:bg-yellow-disabled disabled:text-zinc-900/80`}
                 onClick={handleSubmit(handleGetPricePerGallon)}
-                disabled={!isValid}
+                disabled={
+                  (!dirtyFields.deliveryDate &&
+                    !dirtyFields.gallonsRequested) ||
+                  !!!session?.id
+                }
               >
                 Get Quote
               </button>

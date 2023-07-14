@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   clearMocks: true,
   coverageProvider: "v8",
   preset: "ts-jest/presets/js-with-ts",

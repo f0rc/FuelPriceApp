@@ -1,15 +1,18 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import type { ServerSession } from "~/server/auth";
-import { type AppRouter, appRouter } from "../../root";
-import { prisma } from "~/server/db";
+import { type AppRouter, appRouter } from "../api/root";
 import type { inferProcedureInput } from "@trpc/server";
-import type { PrismaClient } from "@prisma/client";
+import { createInnerTRPCContext } from "../api/trpc";
 import { mockDeep } from "jest-mock-extended";
+import type { PrismaClient } from "@prisma/client";
+import { prisma } from "../db";
 
 describe("QUOTE API TEST", () => {
   test("[QUOTE API]: getPricePerGallon", async () => {
     const req = {} as IncomingMessage; // fake request object
     const res = {} as ServerResponse; // fake request object
+
+    const prismaMock = mockDeep<PrismaClient>();
 
     const mockSession: ServerSession = {
       expires: new Date(),
@@ -21,12 +24,14 @@ describe("QUOTE API TEST", () => {
       },
     };
 
-    const caller = appRouter.createCaller({
+    const ctx = createInnerTRPCContext({
       session: mockSession,
-      prisma: prisma,
       req: req,
       res: res,
+      prisma: prismaMock,
     });
+
+    const caller = appRouter.createCaller(ctx);
 
     type Input = inferProcedureInput<AppRouter["quote"]["getPricePerGallon"]>;
 
@@ -39,6 +44,7 @@ describe("QUOTE API TEST", () => {
     const result = await caller.quote.getPricePerGallon(input);
 
     expect(result).toStrictEqual({
+      status: "sucess",
       total: input.gallonsRequested * 1.5,
       suggestedPrice: 1.5,
     });
@@ -60,12 +66,34 @@ describe("QUOTE API TEST", () => {
 
     const prismaMock = mockDeep<PrismaClient>();
 
-    const caller = appRouter.createCaller({
+    await prisma.user.delete({
+      where: {
+        username: "TEST_USERNAME",
+      },
+    });
+
+    await prisma.user.upsert({
+      where: {
+        username: "TEST_USERNAME",
+      },
+      update: {},
+      create: {
+        id: "TEST_USER_ID",
+        username: "TEST_USERNAME",
+        password: "TEST_PASSWORD",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+    const ctx = createInnerTRPCContext({
       session: mockSession,
-      prisma: prismaMock,
       req: req,
       res: res,
+      prisma: prismaMock,
     });
+
+    const caller = appRouter.createCaller(ctx);
 
     type Input = inferProcedureInput<AppRouter["quote"]["submitQuote"]>;
     const input: Input = {
@@ -73,14 +101,14 @@ describe("QUOTE API TEST", () => {
       gallonsRequested: 40,
     };
 
-    //TODO: 1. nest tests so that total is recieved
-    //      2. add db outputput
-
-    const result = await caller.quote.submitQuote(input);
+    const result = await caller.quote.submitQuote({
+      deliveryDate: new Date(new Date().setHours(24, 0, 0, 0)),
+      gallonsRequested: 40,
+    });
 
     expect(result).toStrictEqual({
-      total: input.gallonsRequested * 1.5,
-      suggestedPrice: 1.5,
+      message: "successfully created order",
+      status: "sucess",
     });
   });
 });
