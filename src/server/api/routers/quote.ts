@@ -55,6 +55,8 @@ export const quoteRouter = createTRPCRouter({
       },
     });
 
+    // console.log("HHEHE", quotes);
+
     if (!quotes) {
       throw new TRPCError({
         code: "NOT_FOUND",
