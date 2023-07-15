@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ToolTip from "~/Components/ToolTip";
 import { profileSchema, type profileSchemaType } from "./profileSchema";
+import Router from "next/router";
 
 export const STATES = [
   "AK",
@@ -72,6 +73,7 @@ const Profile = () => {
     try {
       console.log(data);
       await submitForm.mutateAsync(data);
+      void Router.push("/profile/main");
     } catch (e) {
       console.log(e);
     }
