@@ -25,7 +25,7 @@ export const authRouter = createTRPCRouter({
       const { prisma } = ctx;
       const { username, password } = input;
 
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await ctx.prisma.user.findUnique({
         where: {
           username: username,
         },
@@ -42,7 +42,7 @@ export const authRouter = createTRPCRouter({
 
       // console.log("HASHED", hashedPassword);
 
-      const result = await prisma.user.create({
+      const result = await ctx.prisma.user.create({
         data: {
           username,
           password: hashedPassword,
@@ -69,7 +69,7 @@ export const authRouter = createTRPCRouter({
     const { prisma } = ctx;
     const { username, password } = input;
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await ctx.prisma.user.findUnique({
       where: {
         username: username,
       },
@@ -98,7 +98,7 @@ export const authRouter = createTRPCRouter({
     const sessionexpires = fromDate(sessionMaxAge);
     // add the session to the db
 
-    const createSession = await prisma.session.create({
+    const createSession = await ctx.prisma.session.create({
       data: {
         expires: sessionexpires,
         sessionToken: sessionToken,
@@ -145,9 +145,7 @@ export const authRouter = createTRPCRouter({
       };
     }
 
-    const { prisma } = ctx;
-
-    await prisma.session.delete({
+    await ctx.prisma.session.delete({
       where: {
         sessionToken: ctx.session.sessionToken,
       },
