@@ -4,6 +4,10 @@ import type { inferProcedureInput } from "@trpc/server";
 import { createInnerTRPCContext } from "../api/trpc";
 import { prisma } from "../db";
 
+afterAll(async () => {
+  await prisma.user.deleteMany();
+});
+
 describe("AUTH API", () => {
   test("[AUTH API]: signup", async () => {
     const req = {} as IncomingMessage; // fake request object
