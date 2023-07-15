@@ -7,6 +7,10 @@ import { mockDeep } from "jest-mock-extended";
 import type { PrismaClient } from "@prisma/client";
 import { prisma } from "../db";
 
+afterAll(async () => {
+  await prisma.user.deleteMany();
+});
+
 describe("QUOTE API TEST", () => {
   test("[QUOTE API]: getPricePerGallon", async () => {
     const req = {} as IncomingMessage; // fake request object
@@ -66,11 +70,11 @@ describe("QUOTE API TEST", () => {
 
     const prismaMock = mockDeep<PrismaClient>();
 
-    await prisma.user.delete({
-      where: {
-        username: "TEST_USERNAME",
-      },
-    });
+    // await prisma.user.delete({
+    //   where: {
+    //     username: "TEST_USERNAME",
+    //   },
+    // });
 
     await prisma.user.upsert({
       where: {
