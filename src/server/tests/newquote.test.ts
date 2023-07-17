@@ -1,41 +1,13 @@
-import type { IncomingMessage, ServerResponse } from "http";
-import type { ServerSession } from "~/server/auth";
-import { type AppRouter, appRouter } from "../api/root";
+import { type AppRouter } from "../api/root";
 import type { inferProcedureInput } from "@trpc/server";
-import { createInnerTRPCContext } from "../api/trpc";
-import { mockDeep } from "jest-mock-extended";
-import { Prisma, type PrismaClient } from "@prisma/client";
-import { prisma } from "../db";
-
-afterAll(async () => {
-  await prisma.user.deleteMany();
-});
+import { Prisma } from "@prisma/client";
+import { createTestContext } from "./testingConfig";
 
 describe("QUOTE API TEST", () => {
   test("[QUOTE API]: getPricePerGallon", async () => {
-    const req = {} as IncomingMessage; // fake request object
-    const res = {} as ServerResponse; // fake request object
-
-    const prismaMock = mockDeep<PrismaClient>();
-
-    const mockSession: ServerSession = {
-      expires: new Date(),
-      id: "TEST_SESSION_ID",
-      sessionToken: "TEST_SESSION_TOKEN",
-      User: {
-        id: "TEST_USER_ID",
-        username: "TEST_USERNAME",
-      },
-    };
-
-    const ctx = createInnerTRPCContext({
-      session: mockSession,
-      req: req,
-      res: res,
-      prisma: prismaMock,
+    const { caller } = createTestContext({
+      session: true,
     });
-
-    const caller = appRouter.createCaller(ctx);
 
     type Input = inferProcedureInput<AppRouter["quote"]["getPricePerGallon"]>;
 
@@ -55,20 +27,9 @@ describe("QUOTE API TEST", () => {
   });
 
   test("[QUOTE API]: submit quote", async () => {
-    const req = {} as IncomingMessage; // fake request object
-    const res = {} as ServerResponse; // fake request object
-
-    const mockSession: ServerSession = {
-      expires: new Date(),
-      id: "TEST_USER_ID",
-      sessionToken: "TEST_SESSION_TOKEN",
-      User: {
-        id: "TEST_USER_ID",
-        username: "TEST_USERNAME",
-      },
-    };
-
-    const prismaMock = mockDeep<PrismaClient>();
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
 
     prismaMock.user.create.mockResolvedValue({
       id: "TEST_USER_ID",
@@ -88,15 +49,6 @@ describe("QUOTE API TEST", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
-    const ctx = createInnerTRPCContext({
-      session: mockSession,
-      req: req,
-      res: res,
-      prisma: prismaMock,
-    });
-
-    const caller = appRouter.createCaller(ctx);
 
     type Input = inferProcedureInput<AppRouter["quote"]["submitQuote"]>;
     const input: Input = {

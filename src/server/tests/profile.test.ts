@@ -8,9 +8,9 @@ import { mockDeep } from "jest-mock-extended";
 import type { PrismaClient } from "@prisma/client";
 import { prisma } from "../db";
 
-afterAll(async () => {
-  await prisma.user.deleteMany();
-});
+// afterAll(async () => {
+//   await prisma.user.deleteMany();
+// });
 
 describe("PROFILE API TEST", () => {
   test("[PROFILE API]: createProfile", async () => {
