@@ -22,15 +22,13 @@ export const authRouter = createTRPCRouter({
   signUp: publicProcedure
     .input(loginSchema)
     .mutation(async ({ ctx, input }) => {
-      const { prisma } = ctx;
       const { username, password } = input;
 
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await ctx.prisma.user.findUnique({
         where: {
           username: username,
         },
       });
-
       if (existingUser) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -42,7 +40,7 @@ export const authRouter = createTRPCRouter({
 
       // console.log("HASHED", hashedPassword);
 
-      const result = await prisma.user.create({
+      const result = await ctx.prisma.user.create({
         data: {
           username,
           password: hashedPassword,
@@ -66,10 +64,9 @@ export const authRouter = createTRPCRouter({
     }),
 
   login: publicProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
-    const { prisma } = ctx;
     const { username, password } = input;
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await ctx.prisma.user.findUnique({
       where: {
         username: username,
       },
@@ -98,7 +95,7 @@ export const authRouter = createTRPCRouter({
     const sessionexpires = fromDate(sessionMaxAge);
     // add the session to the db
 
-    const createSession = await prisma.session.create({
+    const createSession = await ctx.prisma.session.create({
       data: {
         expires: sessionexpires,
         sessionToken: sessionToken,
@@ -116,11 +113,15 @@ export const authRouter = createTRPCRouter({
     // set the cookie
     const cookies = new Cookies(ctx.req, ctx.res);
 
-    cookies.set("auth-session-id", sessionToken, {
-      expires: sessionexpires,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
+    try {
+      cookies.set("auth-session-id", sessionToken, {
+        expires: sessionexpires,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
+    } catch (e) {
+      // console.log(e);
+    }
 
     return {
       status: "success",
@@ -136,18 +137,13 @@ export const authRouter = createTRPCRouter({
   }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
-    console.log("cookie", ctx.req?.headers.cookie);
-    console.log("money", ctx.session);
-
     if (!ctx.session || ctx.session.expires < new Date()) {
       return {
         status: "success",
       };
     }
 
-    const { prisma } = ctx;
-
-    await prisma.session.delete({
+    await ctx.prisma.session.delete({
       where: {
         sessionToken: ctx.session.sessionToken,
       },
@@ -159,6 +155,7 @@ export const authRouter = createTRPCRouter({
       expires: new Date(0),
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
 
     return {

@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { newQuoteSchema } from "~/pages/newquote/newquoteSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { prisma } from "~/server/db";
 
 export const quoteRouter = createTRPCRouter({
   getPricePerGallon: protectedProcedure
@@ -24,18 +23,19 @@ export const quoteRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { gallonsRequested, deliveryDate, pricePerGallon, total } = input;
 
-      try {
-        await prisma.quote.create({
-          data: {
-            userId: ctx.session.User.id,
-            deliveryDate: deliveryDate,
-            gallonsRequested: gallonsRequested,
-            pricePerGallon: pricePerGallon,
-            total: total,
-          },
-        });
-      } catch (e) {
-        console.log(e);
+      const quote = await ctx.prisma.quote.create({
+        data: {
+          userId: ctx.session.User.id,
+          deliveryDate: deliveryDate,
+          gallonsRequested: gallonsRequested,
+          pricePerGallon: pricePerGallon,
+          total: total,
+        },
+      });
+
+      // console.log("QUOTE", quote);
+
+      if (!quote) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong!",
