@@ -1,59 +1,56 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { IncomingMessage, ServerResponse } from "http";
-import type { ServerSession } from "~/server/auth";
-import { type AppRouter, appRouter } from "../api/root";
+import { type AppRouter } from "../api/root";
 import type { inferProcedureInput } from "@trpc/server";
-import { createInnerTRPCContext } from "../api/trpc";
-import { mockDeep } from "jest-mock-extended";
-import type { PrismaClient } from "@prisma/client";
-import { prisma } from "../db";
-
-// afterAll(async () => {
-//   await prisma.user.deleteMany();
-// });
+import { createTestContext } from "./testingConfig";
 
 describe("PROFILE API TEST", () => {
   test("[PROFILE API]: createProfile", async () => {
-    const req = {} as IncomingMessage; // fake request object
-    const res = {} as ServerResponse; // fake request object
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
 
-    const prismaMock = mockDeep<PrismaClient>();
-
-    // await prisma.user.delete({
+    // const user1 = await prisma.user.upsert({
     //   where: {
     //     username: "TEST_USERNAME",
     //   },
+    //   update: {},
+    //   create: {
+    //     id: "TEST_USER_ID",
+    //     username: "TEST_USERNAME",
+    //     password: "TEST_PASSWORD",
+    //     createdAt: new Date(),
+    //     updatedAt: new Date(),
+    //   },
     // });
+    // console.log(user1);
 
-    const user1 = await prisma.user.upsert({
-      where: {
-        username: "TEST_USERNAME",
-      },
-      update: {},
-      create: {
-        id: "TEST_USER_ID",
-        username: "TEST_USERNAME",
-        password: "TEST_PASSWORD",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+    // const mockSession: ServerSession = {
+    //   expires: new Date(),
+    //   id: user1.id,
+    //   sessionToken: "TEST_SESSION_TOKEN",
+    //   User: user1,
+    // };
+
+    prismaMock.user.create.mockResolvedValue({
+      id: "TEST_USER_ID",
+      password: "test",
+      username: "TEST_USERNAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
-    console.log(user1);
 
-    const mockSession: ServerSession = {
-      expires: new Date(),
-      id: user1.id,
-      sessionToken: "TEST_SESSION_TOKEN",
-      User: user1,
-    };
-
-    const ctx1 = createInnerTRPCContext({
-      session: mockSession,
-      req: req,
-      res: res,
-      prisma: prismaMock,
+    prismaMock.profile.upsert.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS1",
+      address2: "TEST_ADDRESS2",
+      name: "TEST_FULLNAME",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "12345",
+      address: "TEST_ADDRESS1 TEST_ADDRESS2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
-    const caller = appRouter.createCaller(ctx1);
 
     type Input = inferProcedureInput<AppRouter["profile"]["createProfile"]>;
 
@@ -62,27 +59,74 @@ describe("PROFILE API TEST", () => {
       address2: "TEST_ADDRESS2",
       fullName: "TEST_FULLNAME",
       city: "TEST_CITY",
-      state: "AK",
+      state: "TX",
       zipcode: "12345",
     };
 
     const result = await caller.profile.createProfile(input);
-    console.log(result);
+    //console.log(result);
     expect(result).toStrictEqual({
       profile: {
-        id: result.profile.id,
-        userId: result.profile.userId,
+        id: "TEST_PROFILE_ID",
+        userId: "TEST_USER_ID",
         address1: "TEST_ADDRESS1",
         address2: "TEST_ADDRESS2",
         name: "TEST_FULLNAME",
         city: "TEST_CITY",
-        state: "AK",
+        state: "TX",
         zipcode: "12345",
-        //user: { connect: { id: mockSession.User.id } },
         address: ["TEST_ADDRESS1", "TEST_ADDRESS2"].join(" "),
-
         createdAt: result.profile.createdAt,
         updatedAt: result.profile.updatedAt,
+      },
+    });
+  });
+
+  test("[PROFILE API]: profileById", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
+
+    prismaMock.user.create.mockResolvedValue({
+      id: "TEST_USER_ID",
+      password: "test",
+      username: "TEST_USERNAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.profile.findUnique.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS1",
+      address2: "TEST_ADDRESS2",
+      name: "TEST_FULLNAME",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "12345",
+      address: "TEST_ADDRESS1 TEST_ADDRESS2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    // type Input = inferProcedureInput<AppRouter["profile"]["profileById"]>;
+    // const input: Input = {};
+
+    const result = await caller.profile.profileById();
+
+    expect(result).toStrictEqual({
+      profile: {
+        id: "TEST_PROFILE_ID",
+        userId: "TEST_USER_ID",
+        address1: "TEST_ADDRESS1",
+        address2: "TEST_ADDRESS2",
+        name: "TEST_FULLNAME",
+        city: "TEST_CITY",
+        state: "TX",
+        zipcode: "12345",
+        address: ["TEST_ADDRESS1", "TEST_ADDRESS2"].join(" "),
+        createdAt: result.profile?.createdAt,
+        updatedAt: result.profile?.updatedAt,
       },
     });
   });
