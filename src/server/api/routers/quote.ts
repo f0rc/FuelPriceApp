@@ -13,7 +13,7 @@ export const quoteRouter = createTRPCRouter({
         },
       });
 
-      console.log("USER STATE", userState);
+      // console.log("USER STATE", userState);
 
       const pastQuotes = await ctx.prisma.quote.findMany({
         where: {
@@ -64,7 +64,7 @@ export const quoteRouter = createTRPCRouter({
         },
       });
 
-      console.log("USER STATE", userState);
+      // console.log("USER STATE", userState);
 
       if (!userState) {
         throw new TRPCError({

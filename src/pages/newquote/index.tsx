@@ -11,7 +11,7 @@ const Newquote = () => {
 
   const submitNewQuote = api.quote.submitQuote.useMutation({
     onSuccess: () => {
-      console.log("MONEY");
+      // console.log("MONEY");
     },
   });
 
@@ -32,7 +32,7 @@ const Newquote = () => {
 
       await submitNewQuote.mutateAsync(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -52,7 +52,7 @@ const Newquote = () => {
     try {
       await pricePerGallon.mutateAsync(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
