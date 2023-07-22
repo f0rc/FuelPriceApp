@@ -6,7 +6,7 @@ export const quoteRouter = createTRPCRouter({
   getPricePerGallon: protectedProcedure
     .input(newQuoteSchema)
     .mutation(async ({ ctx, input }) => {
-      const { gallonsRequested, deliveryDate, pricePerGallon, total } = input;
+      const { gallonsRequested } = input;
       const userState = await ctx.prisma.profile.findUnique({
         where: {
           userId: ctx.session.User.id,
@@ -58,6 +58,21 @@ export const quoteRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { gallonsRequested, deliveryDate, pricePerGallon, total } = input;
 
+      const userState = await ctx.prisma.profile.findUnique({
+        where: {
+          userId: ctx.session.User.id,
+        },
+      });
+
+      console.log("USER STATE", userState);
+
+      if (!userState) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "USER NOT FOUND",
+        });
+      }
+
       const quote = await ctx.prisma.quote.create({
         data: {
           userId: ctx.session.User.id,
@@ -65,6 +80,12 @@ export const quoteRouter = createTRPCRouter({
           gallonsRequested: gallonsRequested,
           pricePerGallon: pricePerGallon,
           total: total,
+
+          deliveryAddressStreet: userState.address1,
+          deliveryAddressStreet2: userState.address2,
+          deliveryAddressCity: userState.city,
+          deliveryAddressState: userState.state,
+          deliveryAddressZipcode: userState.zipcode,
         },
       });
 
