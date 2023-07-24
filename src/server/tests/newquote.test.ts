@@ -5,7 +5,7 @@ import { createTestContext } from "./testingConfig";
 
 describe("QUOTE API TEST", () => {
   test("[QUOTE API]: getPricePerGallon", async () => {
-    const { caller } = createTestContext({
+    const { caller, prismaMock } = createTestContext({
       session: true,
     });
 
@@ -17,12 +17,59 @@ describe("QUOTE API TEST", () => {
       gallonsRequested: 40,
     };
 
+    prismaMock.profile.findUnique.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS",
+      address2: "TEST_ADDRESS2",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "TEST_ZIPCODE",
+      address: "TEST_ADDRESS, TEST_ADDRESS2, TEST_CITY, TX, TEST_ZIPCODE",
+      name: "TEST_NAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.quote.findMany.mockResolvedValue([
+      {
+        id: "TEST_QUOTE_ID",
+        userId: "TEST_USER_ID",
+        deliveryDate: new Date(),
+        gallonsRequested: new Prisma.Decimal(1),
+        pricePerGallon: new Prisma.Decimal(1),
+        total: new Prisma.Decimal(1),
+        deliveryAddressStreet: "TEST_ADDRESS",
+        deliveryAddressStreet2: "TEST_ADDRESS2",
+        deliveryAddressCity: "TEST_CITY",
+        deliveryAddressState: "TX",
+        deliveryAddressZipcode: "TEST_ZIPCODE",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+
+    const locationFactor = 0.02;
+    const rateHistoryFactor = 0.01;
+
+    const gallonsRequestedFactor = input.gallonsRequested >= 1000 ? 0.02 : 0.03;
+
+    const companyProfitFactor = 0.1;
+
+    const margin =
+      1.5 *
+      (locationFactor -
+        rateHistoryFactor +
+        gallonsRequestedFactor +
+        companyProfitFactor);
+
+    const suggestedPrice = 1.5 + margin;
     const result = await caller.quote.getPricePerGallon(input);
 
     expect(result).toStrictEqual({
       status: "sucess",
-      total: input.gallonsRequested * 1.5,
-      suggestedPrice: 1.5,
+      total: input.gallonsRequested * suggestedPrice,
+      suggestedPrice: suggestedPrice,
     });
   });
 
@@ -46,6 +93,26 @@ describe("QUOTE API TEST", () => {
       gallonsRequested: new Prisma.Decimal(1),
       pricePerGallon: new Prisma.Decimal(1),
       total: new Prisma.Decimal(1),
+      deliveryAddressStreet: "TEST_ADDRESS",
+      deliveryAddressStreet2: "TEST_ADDRESS2",
+      deliveryAddressCity: "TEST_CITY",
+      deliveryAddressState: "TEST_STATE",
+      deliveryAddressZipcode: "TEST_ZIPCODE",
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.profile.findUnique.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS",
+      address2: "TEST_ADDRESS2",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "TEST_ZIPCODE",
+      address: "TEST_ADDRESS, TEST_ADDRESS2, TEST_CITY, TX, TEST_ZIPCODE",
+      name: "TEST_NAME",
       createdAt: new Date(),
       updatedAt: new Date(),
     });

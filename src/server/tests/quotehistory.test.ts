@@ -17,6 +17,11 @@ describe("quotehistory", () => {
         gallonsRequested: new Prisma.Decimal(1),
         pricePerGallon: new Prisma.Decimal(1),
         total: new Prisma.Decimal(1),
+        deliveryAddressStreet: "TEST_ADDRESS",
+        deliveryAddressStreet2: "TEST_ADDRESS2",
+        deliveryAddressCity: "TEST_CITY",
+        deliveryAddressState: "TX",
+        deliveryAddressZipcode: "TEST_ZIPCODE",
       },
     ];
 
