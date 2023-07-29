@@ -1,4 +1,5 @@
 import type { Quote } from "@prisma/client";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -70,7 +71,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           gallonsRequested
         );
 
-        return <div className="">{formatted}</div>;
+        return(<Link href="/quotedetails"  target="_blank"><div className="">{formatted}</div></Link>);
       },
     },
     {
@@ -91,7 +92,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           currency: "USD",
         }).format(pricePerGallon);
 
-        return <div className="">{formatted}</div>;
+        return (<Link href="/quotedetails"  target="_blank"><div className="">{formatted}</div></Link>);
       },
     },
     {
@@ -112,7 +113,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           currency: "USD",
         }).format(total);
 
-        return <div className="">{formatted}</div>;
+        return (<Link href="/quotedetails"  target="_blank"><div className="">{formatted}</div></Link>);
       },
     },
     {
@@ -128,7 +129,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
       },
       cell: ({ row }) => {
         // console.log(row.original.deliveryDate);
-        return <span>{row.original.deliveryDate.toLocaleDateString()}</span>;
+        return (<Link href="/quotedetails"  target="_blank"><span>{row.original.deliveryDate.toLocaleDateString()}</span></Link>);
       },
     },
   ];
