@@ -61,12 +61,18 @@ model Profile {
 }
 
 model Quote {
-    id               String   @id @unique @default(cuid())
-    userId           String
-    gallonsRequested Decimal
-    deliveryDate     DateTime
-    pricePerGallon   Decimal
-    total            Decimal
+    id                     String   @id @unique @default(cuid())
+    userId                 String
+    gallonsRequested       Decimal
+    deliveryDate           DateTime
+    pricePerGallon         Decimal
+    deliveryAddressStreet  String
+    deliveryAddressStreet2 String?
+    deliveryAddressCity    String
+    deliveryAddressState   String
+    deliveryAddressZipcode String
+
+    total Decimal
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

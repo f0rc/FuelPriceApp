@@ -11,7 +11,7 @@ const Newquote = () => {
 
   const submitNewQuote = api.quote.submitQuote.useMutation({
     onSuccess: () => {
-      console.log("MONEY");
+      // console.log("MONEY");
     },
   });
 
@@ -28,10 +28,11 @@ const Newquote = () => {
 
   const submitForm = async (data: newQuoteSchemaType) => {
     try {
-      console.log(data);
+      // console.log(data);
+
       await submitNewQuote.mutateAsync(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -51,7 +52,7 @@ const Newquote = () => {
     try {
       await pricePerGallon.mutateAsync(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -157,7 +158,7 @@ const Newquote = () => {
                 </div>
               ) : pricePerGallon.isSuccess ? (
                 <span className="cursor-not-allowed ">
-                  {watch().pricePerGallon > 0 ? watch().pricePerGallon : 0}
+                  ${watch().pricePerGallon > 0 ? watch().pricePerGallon : 0}
                 </span>
               ) : (
                 <p className="cursor-not-allowed ">
@@ -177,12 +178,30 @@ const Newquote = () => {
             </label>
             <div className="flex flex-col p-4">
               <span className="text-start text-sm">
-                ${watch().pricePerGallon > 0 ? watch().pricePerGallon : 0} x{" "}
-                {watch().gallonsRequested > 0 ? watch().gallonsRequested : 0}{" "}
+                $
+                {watch().pricePerGallon > 0
+                  ? watch().pricePerGallon.toLocaleString(undefined, {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 3,
+                    })
+                  : 0}{" "}
+                x{" "}
+                {watch().gallonsRequested > 0
+                  ? watch().gallonsRequested.toLocaleString(undefined, {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 3,
+                    })
+                  : 0}{" "}
                 gallons
               </span>
               <span className="text-start text-xl font-semibold">
-                ${watch().total > 0 ? watch().total : 0}
+                $
+                {watch().total > 0
+                  ? watch().total.toLocaleString(undefined, {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 3,
+                    })
+                  : 0}
               </span>
             </div>
           </div>
@@ -217,7 +236,7 @@ const Newquote = () => {
             </ToolTip>
           </div>
         </div>
-        {/* <pre>{JSON.stringify(watch(), null, 2)}</pre> */}
+        <pre>{JSON.stringify(watch(), null, 2)}</pre>
       </div>
     </div>
   );

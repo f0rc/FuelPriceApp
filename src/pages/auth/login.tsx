@@ -34,7 +34,7 @@ const Login = () => {
 
   const { mutateAsync } = api.auth.login.useMutation({
     onSuccess: () => {
-      console.log("success");
+      // console.log("success");
       // add a check to see if its first login then go to profile page prob some db check idk
       window.location.href = "/";
     },

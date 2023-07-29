@@ -10,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const { mutateAsync } = api.auth.logout.useMutation({
     onSuccess: () => {
-      console.log("logged out");
+      // console.log("logged out");
       window.location.href = "/";
     },
   });

@@ -2,6 +2,7 @@ import { type CreateHTTPContextOptions } from "@trpc/server/adapters/standalone"
 import { type ServerSession } from "~/server/auth";
 import { prisma } from "~/server/db";
 
+/* istanbul ignore next */
 export const getServerAuthSession = async (ctx: {
   req: CreateHTTPContextOptions["req"];
   res: CreateHTTPContextOptions["res"];
@@ -29,7 +30,7 @@ export const getServerAuthSession = async (ctx: {
           User: {
             id: user.id,
             username: user.username,
-          }
+          },
         };
       }
     }
@@ -37,6 +38,7 @@ export const getServerAuthSession = async (ctx: {
   return null;
 };
 
+/* istanbul ignore next */
 export const validateSession = async (rawSessionCookie: string) => {
   const session = await prisma.session.findUnique({
     where: {

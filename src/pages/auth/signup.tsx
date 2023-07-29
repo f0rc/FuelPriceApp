@@ -43,7 +43,7 @@ const Signup = () => {
 
   const { mutateAsync } = api.auth.signUp.useMutation({
     onSuccess: () => {
-      console.log("success");
+      // console.log("success");
     },
     onError: (e) => {
       if (e.data?.code === "FORBIDDEN") {
@@ -60,7 +60,7 @@ const Signup = () => {
 
   const onSubmit = handleSubmit(async (data, e) => {
     e?.preventDefault();
-    console.log("DATA", data);
+    // console.log("DATA", data);
     try {
       const result = await mutateAsync({
         username: data.username,
@@ -71,10 +71,10 @@ const Signup = () => {
         window.location.href = "/auth/login";
       } else {
         // set the error to ui
-        console.log("ERROR", result);
+        // console.log("ERROR", result);
       }
     } catch (error) {
-      console.log("Error:", error);
+      // console.log("Error:", error);
     }
   });
 

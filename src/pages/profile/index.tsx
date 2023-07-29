@@ -64,11 +64,14 @@ export const STATES = [
   "WY",
 ] as const;
 const Profile = () => {
+  const profile = api.profile.profileById.useQuery();
+  const data = profile.data;
+
   const submitForm = api.profile.createProfile.useMutation({
     onSuccess: () => {
       console.log("Success");
     },
-  })
+  });
   const submitFormasync = async (data: profileSchemaType) => {
     try {
       console.log(data);
@@ -78,8 +81,7 @@ const Profile = () => {
       console.log(e);
     }
   };
-  
-  
+
   const {
     register,
     handleSubmit,
@@ -88,8 +90,16 @@ const Profile = () => {
     setValue,
   } = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),
+    defaultValues: {
+      fullName: data?.profile?.name,
+      address1: data?.profile?.address1,
+      address2: data?.profile?.address2 ?? "",
+      city: data?.profile?.city,
+      state: data?.profile?.state,
+      zipcode: data?.profile?.zipcode,
+    },
   });
-  
+
   console.log("errors", errors);
 
   return (
@@ -101,9 +111,7 @@ const Profile = () => {
           </h1>
           <div className="grid gap-4">
             <div className="flex flex-col gap-1">
-            <p className="text-sm text-red-500">
-              {errors.fullName?.message}
-            </p>
+              <p className="text-sm text-red-500">{errors.fullName?.message}</p>
               <label
                 htmlFor="fullName"
                 className="text-xs font-semibold uppercase"
@@ -113,9 +121,7 @@ const Profile = () => {
               <input
                 type="text"
                 {...register("fullName")}
-                
                 id="fullName"
-                
                 required
                 maxLength={50}
                 placeholder="John/Jane Doe"

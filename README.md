@@ -16,15 +16,15 @@
 
 # TODO
 - [x] create the database (schema table, models etc)
-- [ ] profile page
+- [x] profile page
   - [x] frontend ui + validation
-  - [ ] backend 
+  - [x] backend 
 - [x] signup/login/logout page (frontend, backend)
   - [x] frontend ui + validation
   - [x] backend api (signup, login, logout)
-- [ ] customer get new quote component (frontend, backend)
+- [x] customer get new quote component (frontend, backend)
   - [x] frontend ui 
-  - [ ] backend api
-- [ ] customer quoute history component (frontend, backend)
-  - [ ] frontend ui
-  - [ ] backend api
+  - [x] backend api
+- [x] customer quoute history component (frontend, backend)
+  - [x] frontend ui
+  - [x] backend api

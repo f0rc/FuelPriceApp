@@ -1,17 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import { profileSchema } from "~/pages/profile/profileSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { prisma } from "~/server/db";
 
 export const profileRouter = createTRPCRouter({
   createProfile: protectedProcedure
     .input(profileSchema)
     .mutation(async ({ input, ctx }) => {
       const { address1, address2, fullName, city, state, zipcode } = input;
-      const { session } = ctx;
 
-      const profile = await prisma.profile.upsert({
-        where: { userId: session.id },
+      const profile = await ctx.prisma.profile.upsert({
+        where: { userId: ctx.session.id },
         create: {
           address1: address1,
 
@@ -20,7 +18,7 @@ export const profileRouter = createTRPCRouter({
           city: city,
           state: state,
           zipcode: zipcode,
-          user: { connect: { id: session.id } },
+          user: { connect: { id: ctx.session.id } },
           address: [address1, address2].join(" "),
         },
         update: {
@@ -31,7 +29,7 @@ export const profileRouter = createTRPCRouter({
           city: city,
           state: state,
           zipcode: zipcode,
-          user: { connect: { id: session.id } },
+          user: { connect: { id: ctx.session.id } },
           address: [address1, address2].join(" "),
         },
       });
@@ -41,9 +39,8 @@ export const profileRouter = createTRPCRouter({
       };
     }),
   profileById: protectedProcedure.query(async ({ ctx }) => {
-    const { session } = ctx;
-    const profile = await prisma.profile.findUnique({
-      where: { userId: session.id },
+    const profile = await ctx.prisma.profile.findUnique({
+      where: { userId: ctx.session.id },
     });
     return {
       profile,
@@ -51,11 +48,9 @@ export const profileRouter = createTRPCRouter({
   }),
 
   getUserAddress: protectedProcedure.query(async ({ ctx }) => {
-    const { prisma, session } = ctx;
-
-    const profile = await prisma.profile.findUnique({
+    const profile = await ctx.prisma.profile.findUnique({
       where: {
-        userId: session.User.id,
+        userId: ctx.session.User.id,
       },
     });
 

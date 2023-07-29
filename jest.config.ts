@@ -9,4 +9,16 @@ module.exports = {
   moduleNameMapper: {
     "~/(.*)": ["<rootDir>/src/$1"],
   },
+  coveragePathIgnorePatterns: [
+    "node_modules",
+    "test-config",
+    "interfaces",
+    "jestGlobalMocks.ts",
+    ".module.ts",
+    "<rootDir>/src/utils/session.ts",
+    "<rootDir>/src/server/api/trpc.ts",
+    "<rootDir>/src/server/api/trpc.ts",
+
+    // ".mock.ts",
+  ],
 };
