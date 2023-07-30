@@ -20,7 +20,6 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
   const TableColumns: ColumnDef<Quote>[] = [

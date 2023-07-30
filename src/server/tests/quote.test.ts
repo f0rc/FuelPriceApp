@@ -1,5 +1,5 @@
-import { inferProcedureInput } from "@trpc/server";
-import { AppRouter } from "../api/root";
+import { type inferProcedureInput } from "@trpc/server";
+import { type AppRouter } from "../api/root";
 import { createTestContext } from "./testingConfig";
 import { Prisma } from "@prisma/client";
 describe("Quote Details API Test", () => {
