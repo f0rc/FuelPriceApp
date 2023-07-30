@@ -1,5 +1,4 @@
 import type { Quote } from "@prisma/client";
-import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -20,6 +19,8 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
   const TableColumns: ColumnDef<Quote>[] = [
@@ -71,7 +72,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           gallonsRequested
         );
 
-        return(<Link href="/quotedetails"  target="_blank"><div className="">{formatted}</div></Link>);
+        return <div className="">{formatted}</div>;
       },
     },
     {
@@ -92,7 +93,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           currency: "USD",
         }).format(pricePerGallon);
 
-        return (<Link href="/quotedetails"  target="_blank"><div className="">{formatted}</div></Link>);
+        return <div className="">{formatted}</div>;
       },
     },
     {
@@ -113,7 +114,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
           currency: "USD",
         }).format(total);
 
-        return (<Link href="/quotedetails"  target="_blank"><div className="">{formatted}</div></Link>);
+        return <div className="">{formatted}</div>;
       },
     },
     {
@@ -129,7 +130,7 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
       },
       cell: ({ row }) => {
         // console.log(row.original.deliveryDate);
-        return (<Link href="/quotedetails"  target="_blank"><span>{row.original.deliveryDate.toLocaleDateString()}</span></Link>);
+        return <span>{row.original.deliveryDate.toLocaleDateString()}</span>;
       },
     },
   ];
@@ -150,6 +151,8 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
       rowSelection,
     },
   });
+
+  const navigate = useRouter();
 
   return (
     <div className="container items-center justify-center border-2 border-black">
@@ -180,6 +183,10 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  onClick={async () => {
+                    navigate.query.id = row.original.id;
+                    await navigate.push(`/quote/${row.original.id}`);
+                  }}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className="border-b-2 border-black even:bg-light-color hover:bg-dark-color/10"
