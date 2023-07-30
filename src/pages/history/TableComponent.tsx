@@ -19,6 +19,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
   const TableColumns: ColumnDef<Quote>[] = [
@@ -150,6 +151,8 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
     },
   });
 
+  const navigate = useRouter();
+
   return (
     <div className="container items-center justify-center border-2 border-black">
       <div className="flex flex-col justify-center pt-4">
@@ -179,6 +182,10 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  onClick={async () => {
+                    navigate.query.id = row.original.id;
+                    await navigate.push(`/quote/${row.original.id}`);
+                  }}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className="border-b-2 border-black even:bg-light-color hover:bg-dark-color/10"
