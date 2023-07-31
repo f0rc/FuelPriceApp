@@ -1,7 +1,7 @@
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
-import { SessionProvider } from "./auth/SessionProvider";
+import { SessionProvider } from "../Components/auth/SessionProvider";
 import { type ServerSession } from "~/server/auth";
 import Layout from "~/Components/Layout";
 
