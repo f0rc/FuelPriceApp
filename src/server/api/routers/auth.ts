@@ -8,6 +8,7 @@ import {
 import { hash, verify } from "argon2";
 import { randomUUID } from "crypto";
 import Cookies from "cookies";
+import { env } from "~/env.mjs";
 // import Cookies from "cookies";
 
 export const loginSchema = z.object({
@@ -112,12 +113,12 @@ export const authRouter = createTRPCRouter({
 
     // set the cookie
     const cookies = new Cookies(ctx.req, ctx.res);
-
     try {
       cookies.set("auth-session-id", sessionToken, {
         expires: sessionexpires,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: env.NODE_ENV === "production",
+        sameSite: "strict",
       });
     } catch (e) {
       // console.log(e);
