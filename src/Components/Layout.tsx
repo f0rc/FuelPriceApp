@@ -1,19 +1,53 @@
 import Link from "next/link";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { useSession } from "~/pages/auth/SessionProvider";
 import { api } from "~/utils/api";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { session } = useSession();
-  // const router = useRouter();
-
+  const router = useRouter();
   const { mutateAsync } = api.auth.logout.useMutation({
     onSuccess: () => {
       // console.log("logged out");
       window.location.href = "/";
     },
   });
+
+  if (
+    !session &&
+    router.pathname !== "/auth/login" &&
+    router.pathname !== "/auth/signup" &&
+    router.pathname !== "/" &&
+    router.pathname !== "/about"
+  ) {
+    void router.push("/auth/login");
+  }
+
+  if (
+    !session?.User.profileComplete &&
+    router.pathname !== "/auth/login" &&
+    router.pathname !== "/auth/signup" &&
+    router.pathname !== "/" &&
+    router.pathname !== "/about" &&
+    router.pathname !== "/profile/main" &&
+    router.pathname !== "/profile"
+  ) {
+    toast.error(
+      (t) => (
+        <span onClick={() => toast.dismiss(t.id)}>
+          Please complete your profile before continuing
+        </span>
+      ),
+      {
+        id: "profileError",
+      }
+    );
+    void router.push("/profile/main");
+  }
+
+  console.log(session?.User.profileComplete, "HHHHHH");
 
   const handleLogout = async () => {
     await mutateAsync();

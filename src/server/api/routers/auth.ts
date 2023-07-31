@@ -162,6 +162,28 @@ export const authRouter = createTRPCRouter({
       status: "success",
     };
   }),
+
+  profileComplete: protectedProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.prisma.profile.findUnique({
+      where: {
+        userId: ctx.session?.User.id,
+      },
+    });
+
+    if (!profile) {
+      return {
+        status: "error",
+        message: "Profile not found",
+        profile: false,
+      };
+    }
+
+    return {
+      status: "success",
+      message: "Profile found",
+      profile: true,
+    };
+  }),
 });
 
 const fromDate = (time: number, date = Date.now()) =>
