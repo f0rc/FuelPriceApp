@@ -101,6 +101,7 @@ export const quoteRouter = createTRPCRouter({
       return {
         status: "sucess",
         message: "successfully created order",
+        quoteId: quote.id,
       };
     }),
 

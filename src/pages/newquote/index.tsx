@@ -7,13 +7,15 @@ import {
   type newQuoteSchemaType,
 } from "../../Components/newquote/newquoteSchema";
 import { useSession } from "../../Components/auth/SessionProvider";
+import { useRouter } from "next/router";
 
 const Newquote = () => {
   const { session } = useSession();
+  const router = useRouter();
 
   const submitNewQuote = api.quote.submitQuote.useMutation({
-    onSuccess: () => {
-      // console.log("MONEY");
+    onSuccess: async (data) => {
+      await router.push(`/quote/${data.quoteId}`);
     },
   });
 

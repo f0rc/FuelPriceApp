@@ -26,58 +26,58 @@ const QuoteDetail = () => {
 
           {isLoading ? (
             <>
-              <p className="mb-6 flex flex-row items-center text-lg text-gray-800">
+              <div className="mb-6 flex flex-row items-center text-lg text-gray-800">
                 Gallons Ordered:{" "}
                 <div className="animate-pulse pl-4">
                   <div className="mr-3 h-4 w-40 items-center justify-center rounded-full bg-gray-300 align-middle"></div>
                 </div>
-              </p>
-              <p className="mb-6 flex flex-row items-center text-lg text-gray-800">
+              </div>
+              <div className="mb-6 flex flex-row items-center text-lg text-gray-800">
                 Delivery Date:{" "}
                 <div className="animate-pulse pl-4">
                   <div className="mr-3 h-4 w-40 items-center justify-center rounded-full bg-gray-300 align-middle"></div>
                 </div>
-              </p>
-              <p className="mb-6 flex flex-row items-center text-lg text-gray-800">
+              </div>
+              <div className="mb-6 flex flex-row items-center text-lg text-gray-800">
                 Delivery Address:{" "}
                 <div className="animate-pulse pl-4">
                   <div className="mr-3 h-4 w-40 items-center justify-center rounded-full bg-gray-300 align-middle"></div>
                 </div>
-              </p>
-              <p className="mb-6 flex flex-row items-center text-lg text-gray-800">
+              </div>
+              <div className="mb-6 flex flex-row items-center text-lg text-gray-800">
                 Price Per Gallon:{" "}
                 <div className="animate-pulse pl-4">
                   <div className="mr-3 h-4 w-40 items-center justify-center rounded-full bg-gray-300 align-middle"></div>
                 </div>
-              </p>
-              <p className="mb-6 flex flex-row items-center text-lg text-gray-800">
+              </div>
+              <div className="mb-6 flex flex-row items-center text-lg text-gray-800">
                 Total Price:{" "}
                 <div className="animate-pulse pl-4">
                   <div className="mr-3 h-4 w-40 items-center justify-center rounded-full bg-gray-300 align-middle"></div>
                 </div>
-              </p>
+              </div>
             </>
           ) : isError ? (
             <>
               <div className="flex w-full justify-center">
-                <p className="justify-center self-center text-red-400">
+                <div className="justify-center self-center text-red-400">
                   Something went wrong.
-                </p>
+                </div>
               </div>
             </>
           ) : (
             <>
-              <p className="mb-6 flex gap-2 text-lg text-gray-800">
+              <div className="mb-6 flex gap-2 text-lg text-gray-800">
                 Gallon(s) Ordered:{" "}
-                <p>{data.quote?.gallonsRequested.toString()}</p>
-              </p>
-              <p className="mb-6 flex gap-2 text-lg text-gray-800">
+                <div>{data.quote?.gallonsRequested.toString()}</div>
+              </div>
+              <div className="mb-6 flex gap-2 text-lg text-gray-800">
                 Delivery Date:{" "}
                 <p>{data.quote?.deliveryDate.toLocaleDateString()} </p>
-              </p>
-              <p className="mb-6 flex gap-2 text-lg text-gray-800">
+              </div>
+              <div className="mb-6 flex gap-2 text-lg text-gray-800">
                 Delivery Address:{" "}
-                <p>
+                <div>
                   {data.quote?.deliveryAddressStreet2 ? (
                     <>
                       {data.quote?.deliveryAddressStreet}{" "}
@@ -94,15 +94,15 @@ const QuoteDetail = () => {
                       {data.quote?.deliveryAddressZipcode}
                     </>
                   )}
-                </p>
-              </p>
-              <p className="mb-6 flex gap-2 text-lg text-gray-800">
+                </div>
+              </div>
+              <div className="mb-6 flex gap-2 text-lg text-gray-800">
                 Price Per Gallon:{" "}
-                <p>{data.quote?.pricePerGallon.toString()} </p>
-              </p>
-              <p className="mb-6 flex gap-2 text-lg text-gray-800">
-                Total Price: <p>{data.quote?.total.toString()} </p>
-              </p>
+                <div>{data.quote?.pricePerGallon.toString()} </div>
+              </div>
+              <div className="mb-6 flex gap-2 text-lg text-gray-800">
+                Total Price: <div>{data.quote?.total.toString()} </div>
+              </div>
             </>
           )}
         </div>
