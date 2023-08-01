@@ -117,10 +117,11 @@ export const authRouter = createTRPCRouter({
       cookies.set("auth-session-id", sessionToken, {
         expires: sessionexpires,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: false,
+        sameSite: "none",
       });
     } catch (e) {
-      // console.log(e);
+      // console.log("ERROR", e);
     }
 
     return {
@@ -151,12 +152,17 @@ export const authRouter = createTRPCRouter({
 
     const cookies = new Cookies(ctx.req, ctx.res);
 
-    cookies.set("auth-session-id", "", {
-      expires: new Date(0),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
+
+    try {
+      cookies.set("auth-session-id", "", {
+        expires: new Date(0),
+        httpOnly: true,
+        secure: false,
+        sameSite: "none",
+      });
+    } catch (e) {
+      // console.log("ERROR", e);
+    }
 
     return {
       status: "success",
