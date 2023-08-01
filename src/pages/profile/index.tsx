@@ -3,7 +3,10 @@ import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ToolTip from "~/Components/ToolTip";
-import { profileSchema, type profileSchemaType } from "./profileSchema";
+import {
+  profileSchema,
+  type profileSchemaType,
+} from "../../Components/profile/profileSchema";
 import Router from "next/router";
 
 export const STATES = [

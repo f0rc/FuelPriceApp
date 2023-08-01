@@ -21,7 +21,7 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
+export const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
   const TableColumns: ColumnDef<Quote>[] = [
     // {
     //   id: "select",
@@ -232,5 +232,3 @@ const TableComponent = ({ tableData }: { tableData: Quote[] }) => {
     </div>
   );
 };
-
-export default TableComponent;

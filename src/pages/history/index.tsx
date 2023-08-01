@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 
 import React from "react";
-import TableComponent from "./TableComponent";
+import { TableComponent } from "~/Components/table/TableComponent";
 
 const index = () => {
   const tableData = api.quote.getQuoteHistory.useQuery();

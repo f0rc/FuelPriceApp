@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { newQuoteSchema } from "~/pages/newquote/newquoteSchema";
+import { newQuoteSchema } from "~/Components/newquote/newquoteSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const quoteRouter = createTRPCRouter({

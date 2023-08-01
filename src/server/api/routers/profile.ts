@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { profileSchema } from "~/pages/profile/profileSchema";
+import { profileSchema } from "~/Components/profile/profileSchema";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const profileRouter = createTRPCRouter({

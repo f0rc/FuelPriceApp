@@ -2,8 +2,11 @@ import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ToolTip from "~/Components/ToolTip";
-import { newQuoteSchema, type newQuoteSchemaType } from "./newquoteSchema";
-import { useSession } from "../auth/SessionProvider";
+import {
+  newQuoteSchema,
+  type newQuoteSchemaType,
+} from "../../Components/newquote/newquoteSchema";
+import { useSession } from "../../Components/auth/SessionProvider";
 
 const Newquote = () => {
   const { session } = useSession();

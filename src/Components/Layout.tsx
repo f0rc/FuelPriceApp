@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+<<<<<<< HEAD
 import { toast } from "react-hot-toast";
 import { useSession } from "~/pages/auth/SessionProvider";
+=======
+import { useSession } from "~/Components/auth/SessionProvider";
+>>>>>>> 8957e730525f0f0ee9b962889487f1fd3d937c1b
 import { api } from "~/utils/api";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
