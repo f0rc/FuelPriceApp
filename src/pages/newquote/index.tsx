@@ -10,7 +10,6 @@ import { useSession } from "../../Components/auth/SessionProvider";
 
 const Newquote = () => {
   const { session } = useSession();
-  //TODO: add security check to see if a session exists else route to login
 
   const submitNewQuote = api.quote.submitQuote.useMutation({
     onSuccess: () => {

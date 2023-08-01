@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-<<<<<<< HEAD
+import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { useSession } from "~/pages/auth/SessionProvider";
-=======
 import { useSession } from "~/Components/auth/SessionProvider";
->>>>>>> 8957e730525f0f0ee9b962889487f1fd3d937c1b
 import { api } from "~/utils/api";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -19,39 +15,31 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
-  if (
-    !session &&
-    router.pathname !== "/auth/login" &&
-    router.pathname !== "/auth/signup" &&
-    router.pathname !== "/" &&
-    router.pathname !== "/about"
-  ) {
-    void router.push("/auth/login");
-  }
-
-  if (
-    !session?.User.profileComplete &&
-    router.pathname !== "/auth/login" &&
-    router.pathname !== "/auth/signup" &&
-    router.pathname !== "/" &&
-    router.pathname !== "/about" &&
-    router.pathname !== "/profile/main" &&
-    router.pathname !== "/profile"
-  ) {
-    toast.error(
-      (t) => (
-        <span onClick={() => toast.dismiss(t.id)}>
-          Please complete your profile before continuing
-        </span>
-      ),
-      {
-        id: "profileError",
-      }
-    );
-    void router.push("/profile/main");
-  }
-
-  console.log(session?.User.profileComplete, "HHHHHH");
+  useEffect(() => {
+    const profileCompletePages = ["/newquote", "/history"];
+    if (
+      session?.User.profileComplete === false &&
+      profileCompletePages.includes(router.pathname)
+    ) {
+      router
+        .push("/profile/main")
+        .then(() => {
+          toast.error(
+            (t) => (
+              <span onClick={() => toast.dismiss(t.id)}>
+                You must complete your profile to access this page
+              </span>
+            ),
+            {
+              id: "profile",
+            }
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [session, router]);
 
   const handleLogout = async () => {
     await mutateAsync();
@@ -106,5 +94,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
-
 export default Layout;
