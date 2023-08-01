@@ -36,6 +36,7 @@ export function createTestContext({
     User: {
       id: "TEST_USER_ID",
       username: "TEST_USERNAME",
+      profileComplete: true,
     },
   };
 

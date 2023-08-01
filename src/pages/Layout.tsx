@@ -1,19 +1,45 @@
 import Link from "next/link";
-// import { useRouter } from "next/router";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { useSession } from "~/Components/auth/SessionProvider";
 import { api } from "~/utils/api";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { session } = useSession();
-  // const router = useRouter();
-
+  const router = useRouter();
   const { mutateAsync } = api.auth.logout.useMutation({
     onSuccess: () => {
       // console.log("logged out");
       window.location.href = "/";
     },
   });
+
+  useEffect(() => {
+    const profileCompletePages = ["/newquote", "/history"];
+    if (
+      session?.User.profileComplete === false &&
+      profileCompletePages.includes(router.pathname)
+    ) {
+      router
+        .push("/profile/main")
+        .then(() => {
+          toast.error(
+            (t) => (
+              <span onClick={() => toast.dismiss(t.id)}>
+                You must complete your profile to access this page
+              </span>
+            ),
+            {
+              id: "profile",
+            }
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [session, router]);
 
   const handleLogout = async () => {
     await mutateAsync();
@@ -68,5 +94,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
-
 export default Layout;

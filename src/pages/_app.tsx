@@ -3,7 +3,8 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { SessionProvider } from "../Components/auth/SessionProvider";
 import { type ServerSession } from "~/server/auth";
-import Layout from "~/Components/Layout";
+import { Toaster } from "react-hot-toast";
+import Layout from "~/pages/Layout";
 
 const MyApp: AppType<{ session: ServerSession | null }> = ({
   Component,
@@ -12,6 +13,7 @@ const MyApp: AppType<{ session: ServerSession | null }> = ({
   return (
     <SessionProvider>
       <Layout>
+        <Toaster position="top-center" />
         <Component {...pageProps} />
       </Layout>
     </SessionProvider>

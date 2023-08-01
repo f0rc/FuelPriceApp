@@ -210,10 +210,11 @@ describe("AUTH GET SESSION PROC", () => {
     const result = await caller.auth.getSession();
     // might fail because of date comparison??
     expect(result).toStrictEqual({
-      User: { id: "TEST_USER_ID", username: "TEST_USERNAME" },
+      User: { id: "TEST_USER_ID", username: "TEST_USERNAME", profileComplete: true, },
       expires: sessionExpires,
       id: "TEST_USER_ID",
       sessionToken: "TEST_SESSION_TOKEN",
+      
     });
   });
 });

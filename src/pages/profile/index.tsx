@@ -79,7 +79,7 @@ const Profile = () => {
     try {
       console.log(data);
       await submitForm.mutateAsync(data);
-      void Router.push("/profile/main");
+      window.location.href = "/profile/main";
     } catch (e) {
       console.log(e);
     }

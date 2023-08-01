@@ -22,6 +22,13 @@ export const getServerAuthSession = async (ctx: {
           id: session.userId,
         },
       });
+
+      const profile = await prisma.profile.findUnique({
+        where: {
+          userId: session.userId,
+        },
+      });
+
       if (user) {
         return {
           id: user.id,
@@ -30,6 +37,7 @@ export const getServerAuthSession = async (ctx: {
           User: {
             id: user.id,
             username: user.username,
+            profileComplete: !!profile,
           },
         };
       }

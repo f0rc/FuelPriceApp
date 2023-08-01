@@ -36,7 +36,7 @@ const Login = () => {
     onSuccess: () => {
       // console.log("success");
       // add a check to see if its first login then go to profile page prob some db check idk
-      window.location.href = "/";
+      window.location.href = "/profile/main";
     },
 
     onError: (e) => {

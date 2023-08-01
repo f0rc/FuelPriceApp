@@ -15,7 +15,6 @@ const ProfileDisplay = () => {
           </h1>
           <div className="grid gap-4">
             <div className="flex flex-col gap-1">
-             
               <label
                 htmlFor="fullName"
                 className="text-xs font-semibold uppercase"
@@ -23,9 +22,7 @@ const ProfileDisplay = () => {
                 Full Name:
               </label>
               <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4 align-middle">
-                
                 {data?.profile?.name}
-                
               </div>
             </div>
             <div className="flex flex-col gap-1">
@@ -36,9 +33,7 @@ const ProfileDisplay = () => {
                 Address Line1:
               </label>
               <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4 align-middle">
-                
                 {data?.profile?.address1}
-                
               </div>
             </div>
             <div className="flex flex-col gap-1">
@@ -49,9 +44,7 @@ const ProfileDisplay = () => {
                 Address LINE2: &#40;optional&#41;
               </label>
               <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4 align-middle">
-                
                 {data?.profile?.address2}
-                
               </div>
             </div>
             <div className="flex flex-col gap-1">
@@ -59,9 +52,7 @@ const ProfileDisplay = () => {
                 city:
               </label>
               <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4 align-middle">
-                
                 {data?.profile?.city}
-                
               </div>
             </div>
             <div className="flex flex-col gap-1">
@@ -72,9 +63,7 @@ const ProfileDisplay = () => {
                 State:
               </label>
               <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4 align-middle">
-                
                 {data?.profile?.state}
-                
               </div>
             </div>
             <div className="flex flex-col gap-1">
@@ -85,14 +74,12 @@ const ProfileDisplay = () => {
                 Zipcode:
               </label>
               <div className="flex flex-col rounded-2xl border-4 border-black bg-white p-4 align-middle">
-                
                 {data?.profile?.zipcode}
-                
               </div>
             </div>
             <div className="mt-5 flex flex-col gap-1">
               <button
-                onClick={() => Router.push('/profile')}
+                onClick={() => Router.push("/profile")}
                 className="rounded-2xl border-4 border-black bg-yellow-accent p-4 text-xl font-semibold uppercase hover:bg-yellow-300"
               >
                 Update User Information
@@ -107,7 +94,5 @@ const ProfileDisplay = () => {
     </div>
   );
 };
-
-
 
 export default ProfileDisplay;
