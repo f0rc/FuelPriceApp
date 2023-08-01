@@ -238,7 +238,7 @@ const Newquote = () => {
             </ToolTip>
           </div>
         </div>
-        <pre>{JSON.stringify(watch(), null, 2)}</pre>
+        {/* <pre>{JSON.stringify(watch(), null, 2)}</pre> */}
       </div>
     </div>
   );
