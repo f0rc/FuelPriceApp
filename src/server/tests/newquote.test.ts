@@ -127,6 +127,7 @@ describe("QUOTE API TEST", () => {
 
     expect(result).toStrictEqual({
       message: "successfully created order",
+      quoteId: "TEST_QUOTE_ID",
       status: "sucess",
     });
   });
