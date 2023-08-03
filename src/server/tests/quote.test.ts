@@ -2,6 +2,7 @@ import { type inferProcedureInput } from "@trpc/server";
 import { type AppRouter } from "../api/root";
 import { createTestContext } from "./testingConfig";
 import { Prisma } from "@prisma/client";
+
 describe("Quote Details API Test", () => {
   it("should return quote details", async () => {
     const { prismaMock, caller } = createTestContext({
@@ -49,6 +50,25 @@ describe("Quote Details API Test", () => {
         pricePerGallon: new Prisma.Decimal(100),
         total: new Prisma.Decimal(100),
       },
+    });
+  });
+
+  it("should return error if quote not found", async () => {
+    const { prismaMock, caller } = createTestContext({
+      session: true,
+    });
+
+    prismaMock.quote.findUnique.mockResolvedValue(null);
+    type Input = inferProcedureInput<AppRouter["detail"]["getQuoteDetails"]>;
+    const input: Input = {
+      id: "TEST_QUOTE_ID",
+    };
+
+    const result = await caller.detail.getQuoteDetails(input);
+
+    expect(result).toEqual({
+      quote: null,
+      status: "success",
     });
   });
 });
