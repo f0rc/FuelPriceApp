@@ -1,5 +1,5 @@
 import { type AppRouter } from "../api/root";
-import type { inferProcedureInput } from "@trpc/server";
+import { TRPCError, type inferProcedureInput } from "@trpc/server";
 import { Prisma } from "@prisma/client";
 import { createTestContext } from "./testingConfig";
 
@@ -73,6 +73,28 @@ describe("QUOTE API TEST", () => {
     });
   });
 
+  it("should return error if user not found", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
+
+    type Input = inferProcedureInput<AppRouter["quote"]["getPricePerGallon"]>;
+
+    const input: Input = {
+      deliveryDate: new Date(new Date().setHours(24, 0, 0, 0)),
+      gallonsRequested: 40,
+    };
+
+    prismaMock.profile.findUnique.mockResolvedValue(null);
+
+    await expect(caller.quote.getPricePerGallon(input)).rejects.toThrowError(
+      new TRPCError({
+        code: "NOT_FOUND",
+        message: "USER NOT FOUND",
+      })
+    );
+  });
+
   test("[QUOTE API]: submit quote", async () => {
     const { caller, prismaMock } = createTestContext({
       session: true,
@@ -130,5 +152,141 @@ describe("QUOTE API TEST", () => {
       quoteId: "TEST_QUOTE_ID",
       status: "sucess",
     });
+  });
+
+  it("should return error if user not found", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
+
+    prismaMock.profile.findUnique.mockResolvedValue(null);
+
+    type Input = inferProcedureInput<AppRouter["quote"]["submitQuote"]>;
+
+    const input: Input = {
+      deliveryDate: new Date(new Date().setHours(24, 0, 0, 0)),
+      gallonsRequested: 40,
+    };
+
+    await expect(caller.quote.submitQuote(input)).rejects.toThrowError(
+      new TRPCError({
+        code: "NOT_FOUND",
+        message: "USER NOT FOUND",
+      })
+    );
+  });
+
+  test("[QUOTE API]: submit quote with invalid date", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
+
+    prismaMock.user.create.mockResolvedValue({
+      id: "TEST_USER_ID",
+      password: "test",
+      username: "TEST_USERNAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.quote.create.mockResolvedValue({
+      id: "TEST_QUOTE_ID",
+      userId: "TEST_USER_ID",
+      deliveryDate: new Date(),
+      gallonsRequested: new Prisma.Decimal(1),
+      pricePerGallon: new Prisma.Decimal(1),
+      total: new Prisma.Decimal(1),
+      deliveryAddressStreet: "TEST_ADDRESS",
+      deliveryAddressStreet2: "TEST_ADDRESS2",
+      deliveryAddressCity: "TEST_CITY",
+      deliveryAddressState: "TEST_STATE",
+      deliveryAddressZipcode: "TEST_ZIPCODE",
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.profile.findUnique.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS",
+      address2: "TEST_ADDRESS2",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "TEST_ZIPCODE",
+      address: "TEST_ADDRESS, TEST_ADDRESS2, TEST_CITY, TX, TEST_ZIPCODE",
+      name: "TEST_NAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    type Input = inferProcedureInput<AppRouter["quote"]["submitQuote"]>;
+    const input: Input = {
+      deliveryDate: new Date(new Date().setHours(24, 0, 0, 0)),
+      gallonsRequested: 40,
+    };
+
+    const result = await caller.quote.submitQuote(input);
+
+    expect(result).toStrictEqual({
+      message: "successfully created order",
+      quoteId: "TEST_QUOTE_ID",
+      status: "sucess",
+    });
+  });
+
+  it("should return an error if no quote is return ie db error", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
+
+    prismaMock.user.create.mockResolvedValue({
+      id: "TEST_USER_ID",
+      password: "test",
+      username: "TEST_USERNAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.profile.findUnique.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS",
+      address2: "TEST_ADDRESS2",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "TEST_ZIPCODE",
+      address: "TEST_ADDRESS, TEST_ADDRESS2, TEST_CITY, TX, TEST_ZIPCODE",
+      name: "TEST_NAME",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    type Input = inferProcedureInput<AppRouter["quote"]["submitQuote"]>;
+    const input: Input = {
+      deliveryDate: new Date(new Date().setHours(24, 0, 0, 0)),
+      gallonsRequested: 40,
+    };
+
+    await expect(caller.quote.submitQuote(input)).rejects.toThrowError(
+      new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong!",
+      })
+    );
+  });
+
+  it("should return an error if no quotes are found for the user", async () => {
+    const { caller } = createTestContext({
+      session: true,
+    });
+
+    // prismaMock.quote.findMany.mockResolvedValue([]);
+    await expect(caller.quote.getQuoteHistory()).rejects.toThrowError(
+      new TRPCError({
+        code: "NOT_FOUND",
+        message: "NO QUOTES FOUND",
+      })
+    );
   });
 });

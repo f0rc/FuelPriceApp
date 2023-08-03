@@ -135,11 +135,11 @@ export const authRouter = createTRPCRouter({
   }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
-    if (!ctx.session || ctx.session.expires < new Date()) {
-      return {
-        status: "success",
-      };
-    }
+    // if (!ctx.session || ctx.session.expires < new Date()) {
+    //   return {
+    //     status: "success",
+    //   };
+    // }
 
     await ctx.prisma.session.delete({
       where: {
@@ -148,7 +148,6 @@ export const authRouter = createTRPCRouter({
     });
 
     const cookies = new Cookies(ctx.req, ctx.res);
-
 
     try {
       cookies.set("auth-session-id", "", {

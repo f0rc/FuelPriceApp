@@ -79,6 +79,24 @@ describe("AUTH API SIGNUP PROC", () => {
       })
     );
   });
+  it("signup should fail if the prisma client throws an error v2", async () => {
+    const { caller } = createTestContext({
+      session: null,
+    });
+
+    type Input = inferProcedureInput<AppRouter["auth"]["signUp"]>;
+    const input: Input = {
+      username: "TEST_USERNAME",
+      password: "TEST_PASSWORD",
+    };
+
+    await expect(caller.auth.signUp(input)).rejects.toThrowError(
+      new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
+      })
+    );
+  });
 });
 
 describe("AUTH API LOGIN PROC", () => {
@@ -189,6 +207,35 @@ describe("AUTH API LOGIN PROC", () => {
       message: "User logged in",
     });
   });
+
+  it("should fail if no session is created db error", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: null,
+    });
+
+    const hashedPassword = await hash("TEST_PASSWORD");
+
+    prismaMock.user.findUnique.mockResolvedValue({
+      id: "TEST_USER_ID",
+      username: "TEST_USERNAME",
+      password: hashedPassword,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    type Input = inferProcedureInput<AppRouter["auth"]["login"]>;
+    const input: Input = {
+      username: "TEST_USERNAME",
+      password: "TEST_PASSWORD",
+    };
+
+    await expect(caller.auth.login(input)).rejects.toThrowError(
+      new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
+      })
+    );
+  });
 });
 
 describe("AUTH GET SESSION PROC", () => {
@@ -210,11 +257,74 @@ describe("AUTH GET SESSION PROC", () => {
     const result = await caller.auth.getSession();
     // might fail because of date comparison??
     expect(result).toStrictEqual({
-      User: { id: "TEST_USER_ID", username: "TEST_USERNAME", profileComplete: true, },
+      User: {
+        id: "TEST_USER_ID",
+        username: "TEST_USERNAME",
+        profileComplete: true,
+      },
       expires: sessionExpires,
       id: "TEST_USER_ID",
       sessionToken: "TEST_SESSION_TOKEN",
-      
+    });
+  });
+});
+
+describe("AUTH LOGOUT PROC", () => {
+  it("logout should succeed if the user is logged in", async () => {
+    const { caller } = createTestContext({
+      session: true,
+    });
+
+    const result = await caller.auth.logout();
+
+    expect(result).toStrictEqual({
+      status: "success",
+    });
+  });
+});
+
+describe("AUTH GET PROFILE PROC", () => {
+  it("getProfile should succed", async () => {
+    const { caller, prismaMock } = createTestContext({
+      session: true,
+    });
+    const fakeDate = new Date();
+
+    prismaMock.profile.findUnique.mockResolvedValue({
+      id: "TEST_PROFILE_ID",
+      userId: "TEST_USER_ID",
+      address1: "TEST_ADDRESS",
+      address2: "TEST_ADDRESS2",
+      city: "TEST_CITY",
+      state: "TX",
+      zipcode: "TEST_ZIPCODE",
+
+      address: "TEST_ADDRESS, TEST_ADDRESS2, TEST_CITY, TX, TEST_ZIPCODE",
+      name: "TEST_NAME",
+      createdAt: fakeDate,
+      updatedAt: fakeDate,
+    });
+
+    const result = await caller.auth.profileComplete();
+
+    expect(result).toStrictEqual({
+      status: "success",
+      message: "Profile found",
+      profile: true,
+    });
+  });
+
+  it("getProfile should fail if no profile is found", async () => {
+    const { caller } = createTestContext({
+      session: true,
+    });
+
+    const result = await caller.auth.profileComplete();
+
+    expect(result).toStrictEqual({
+      status: "error",
+      message: "Profile not found",
+      profile: false,
     });
   });
 });
