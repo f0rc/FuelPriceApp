@@ -15,5 +15,5 @@
 2. npm or pnpm
 3. docker + docker-compose
 
-![image]()
-![image]()
+![image](https://github.com/f0rc/FuelPriceApp/blob/main/readme/1.png)
+![image](https://github.com/f0rc/FuelPriceApp/blob/main/readme/2.png)
